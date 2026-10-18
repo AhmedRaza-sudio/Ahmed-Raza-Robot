@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=5a5b259a-fd4d-4464-9b99-7034aa87f3ee
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=5a5b259a-fd4d-4464-9b99-7034aa87f3ee">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahmed Raza AI Robot</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#eef2ff;--panel:rgba(255,255,255,.78);--panel2:rgba(255,255,255,.92);
+  --text:#171927;--muted:#73798c;--line:rgba(80,88,130,.15);
+  --accent:#6c63ff;--accent2:#00b8ff;--assistant:#f2f4fb;--user:#24253b;
+}
+body.dark{
+  --bg:#090b13;--panel:rgba(18,21,34,.82);--panel2:rgba(25,29,45,.96);
+  --text:#f5f7ff;--muted:#9ba2b7;--line:rgba(255,255,255,.1);
+  --assistant:#181d2d;--user:#5b55d8;
+}
+body{
+ margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--text);
+ height:100vh;overflow:hidden;background:
+ radial-gradient(circle at 10% 10%,rgba(108,99,255,.25),transparent 28%),
+ radial-gradient(circle at 90% 85%,rgba(0,184,255,.18),transparent 30%),var(--bg);
+ transition:.3s;
+}
+.app{
+ width:min(1180px,96vw);height:min(820px,94vh);margin:auto;
+ position:relative;top:3vh;display:grid;grid-template-columns:245px 1fr;
+ background:var(--panel);backdrop-filter:blur(24px);border:1px solid var(--line);
+ border-radius:28px;box-shadow:0 25px 80px rgba(30,35,80,.18);overflow:hidden;
+}
+.sidebar{padding:20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:15px}
+.brand{display:flex;align-items:center;gap:12px;padding:5px 3px 14px}
+.avatar{
+ width:48px;height:48px;border-radius:16px;display:grid;place-items:center;
+ background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;
+ font-size:24px;box-shadow:0 8px 25px rgba(108,99,255,.3);position:relative;
+}
+.avatar:after{content:"";position:absolute;width:9px;height:9px;border:2px solid var(--panel2);
+ background:#28d17c;border-radius:50%;right:-2px;bottom:-2px}
+.brand h1{font-size:15px;margin:0}.brand span{font-size:11px;color:var(--muted)}
+.side-btn,.tool-btn{
+ width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);
+ border-radius:13px;padding:11px 12px;text-align:left;cursor:pointer;font-weight:600;
+ transition:.2s;display:flex;gap:9px;align-items:center
+}
+.side-btn:hover,.tool-btn:hover{transform:translateY(-1px);border-color:rgba(108,99,255,.4)}
+.side-title{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-top:5px}
+.history{overflow:auto;flex:1}.history-item{padding:9px;border-radius:10px;color:var(--muted);font-size:12px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.history-item:hover{background:rgba(108,99,255,.08);color:var(--text)}
+.sidebar-bottom{display:grid;gap:8px}
+.main{min-width:0;display:flex;flex-direction:column}
+header{
+ padding:17px 21px;border-bottom:1px solid var(--line);display:flex;align-items:center;
+ justify-content:space-between;background:rgba(255,255,255,.04)
+}
+.title-area{display:flex;align-items:center;gap:12px}.mini-avatar{font-size:22px}
+.header-title{font-size:17px;font-weight:800}.online{font-size:11px;color:#27b86b;margin-top:3px}
+.header-actions{display:flex;gap:7px}.icon-btn{
+ width:38px;height:38px;border:1px solid var(--line);border-radius:12px;
+ background:var(--panel2);color:var(--text);cursor:pointer;font-size:17px
+}
+#messages{flex:1;overflow-y:auto;padding:25px 28px;scroll-behavior:smooth}
+#messages::-webkit-scrollbar{width:7px}#messages::-webkit-scrollbar-thumb{background:rgba(120,125,150,.25);border-radius:20px}
+.welcome{text-align:center;max-width:650px;margin:7vh auto 0;animation:rise .5s ease}
+.welcome-logo{
+ width:76px;height:76px;margin:auto;border-radius:24px;display:grid;place-items:center;
+ font-size:38px;color:white;background:linear-gradient(135deg,var(--accent),var(--accent2));
+ box-shadow:0 15px 35px rgba(108,99,255,.28)
+}
+.welcome h2{font-size:29px;margin:18px 0 7px}.welcome p{color:var(--muted);margin:0}
+.suggestions{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-top:23px}
+.suggestion{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 13px;border-radius:13px;cursor:pointer;font-size:12px}
+.suggestion:hover{border-color:var(--accent);transform:translateY(-1px)}
+.msg{display:flex;gap:10px;margin:0 0 19px;animation:rise .25s ease}
+.msg.user{justify-content:flex-end}.msg-icon{width:30px;height:30px;flex:0 0 30px;border-radius:10px;display:grid;place-items:center;font-size:14px;margin-top:2px}
+.assistant .msg-icon{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white}
+.user .msg-icon{background:#383a52;color:white;order:2}
+.bubble-wrap{max-width:78%}.bubble{
+ padding:12px 15px;border-radius:17px;white-space:pre-wrap;line-height:1.55;
+ word-wrap:break-word;border:1px solid var(--line);box-shadow:0 3px 12px rgba(0,0,0,.03)
+}
+.assistant .bubble{background:var(--assistant);border-top-left-radius:5px}
+.user .bubble{background:var(--user);color:white;border:0;border-top-right-radius:5px}
+.meta{display:flex;gap:6px;align-items:center;margin-top:5px;color:var(--muted);font-size:10px}
+.user .meta{justify-content:flex-end}.copy-btn{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:10px}
+.typing{display:flex;gap:4px;padding:15px}.typing i{width:6px;height:6px;background:var(--muted);border-radius:50%;animation:bounce .9s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+.composer{padding:13px 20px 17px;border-top:1px solid var(--line);background:rgba(255,255,255,.04)}
+.tools{display:flex;gap:7px;margin-bottom:9px;overflow:auto}.tool-btn{width:auto;padding:7px 10px;font-size:11px;white-space:nowrap}
+form{display:flex;gap:9px;align-items:flex-end}
+textarea{
+ flex:1;resize:none;min-height:52px;max-height:145px;border:1px solid var(--line);
+ border-radius:17px;padding:14px 15px;background:var(--panel2);color:var(--text);
+ font:inherit;outline:none;transition:.2s
+}
+textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,99,255,.1)}
+.send{
+ width:54px;height:52px;border:0;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+ color:white;font-weight:800;cursor:pointer;font-size:18px;box-shadow:0 8px 20px rgba(108,99,255,.25)
+}
+.send:disabled{opacity:.45;cursor:not-allowed}
+.status{font-size:11px;color:var(--muted);padding:6px 3px 0;min-height:17px}
+.toast{
+ position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;pointer-events:none;
+ background:#171927;color:white;padding:11px 16px;border-radius:12px;font-size:12px;transition:.25s;z-index:20
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal-backdrop{position:fixed;inset:0;background:rgba(5,7,15,.5);backdrop-filter:blur(7px);display:none;place-items:center;z-index:10}
+.modal{width:min(430px,92vw);background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.modal h3{margin:0 0 15px}.setting{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px}
+.switch{width:42px;height:23px;border-radius:20px;background:#bbb;cursor:pointer;padding:3px}.switch:after{content:"";display:block;width:17px;height:17px;border-radius:50%;background:white;transition:.2s}.switch.on{background:var(--accent)}.switch.on:after{transform:translateX(19px)}
+.setting small{display:block;color:var(--muted);font-size:11px;margin-top:3px;max-width:270px;line-height:1.4}
+.close-modal{margin-top:16px;width:100%;padding:11px;border:0;border-radius:12px;background:var(--user);color:white;cursor:pointer}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes bounce{0%,70%,100%{transform:translateY(0)}35%{transform:translateY(-5px)}}
+@media(max-width:760px){
+ body{overflow:auto}.app{top:0;width:100vw;height:100vh;border-radius:0;display:block}
+ .sidebar{display:none}header{padding:13px 14px}#messages{padding:18px 14px}.bubble-wrap{max-width:86%}
+ .composer{padding:10px 12px 12px}.welcome{margin-top:8vh}.welcome h2{font-size:24px}
+}
+
+/* ---------- Hand Drawing Studio: special glowing launcher ---------- */
+.glow-btn{
+  position:relative;
+  border:1px solid transparent;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff !important;
+  font-weight:800;
+  overflow:hidden;
+  isolation:isolate;
+  animation:glowPulse 2.4s ease-in-out infinite;
+}
+.glow-btn::before{
+  content:"";
+  position:absolute;inset:-2px;z-index:-1;border-radius:15px;
+  background:conic-gradient(from 0deg,#6c63ff,#00b8ff,#28d17c,#6c63ff);
+  filter:blur(6px);
+  opacity:.85;
+  animation:glowSpin 3.2s linear infinite;
+}
+.glow-btn span.spark{margin-left:auto;font-size:10px;opacity:.9;letter-spacing:.5px;text-transform:uppercase;background:rgba(255,255,255,.18);padding:2px 7px;border-radius:20px}
+.glow-btn:hover{transform:translateY(-2px) scale(1.015)}
+@keyframes glowPulse{
+  0%,100%{box-shadow:0 0 10px rgba(108,99,255,.55),0 0 24px rgba(0,184,255,.32)}
+  50%{box-shadow:0 0 20px rgba(108,99,255,.9),0 0 46px rgba(0,184,255,.6)}
+}
+@keyframes glowSpin{to{transform:rotate(360deg)}}
+
+.draw-overlay{
+  position:fixed;inset:0;z-index:60;background:#05070f;
+  display:none;flex-direction:column;
+}
+.draw-overlay.show{display:flex}
+.draw-overlay-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 18px;background:#0f1220;color:#eef0ff;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  font-weight:800;font-size:14px;
+}
+.draw-overlay-bar .label{display:flex;align-items:center;gap:8px}
+.close-draw{
+  border:0;border-radius:11px;padding:8px 16px;cursor:pointer;font-weight:800;
+  background:linear-gradient(135deg,#ff5c7a,#ff2d55);color:#fff;
+  box-shadow:0 6px 18px rgba(255,45,85,.35);
+}
+.close-draw:hover{transform:translateY(-1px)}
+.draw-overlay iframe{flex:1;width:100%;height:100%;border:0;background:#000}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="avatar">🤖</div>
+      <div><h1>Ahmed Raza AI</h1><span>Local AI Robot • v2</span></div>
+    </div>
+    <button class="side-btn" id="newChat">＋ New conversation</button>
+    <button class="side-btn glow-btn" id="openDrawBtn">🎨 <span>Hand Drawing Studio</span><span class="spark">New</span></button>
+    <div class="side-title">Quick tools</div>
+    <button class="side-btn quick" data-q="What is your name?">🤖 About you</button>
+    <button class="side-btn quick" data-q="What can you do?">✨ Capabilities</button>
+    <button class="side-btn quick" data-q="What time is it?">🕐 Current time</button>
+    <div class="side-title">Recent chats</div>
+    <div class="history" id="history"></div>
+    <div class="sidebar-bottom">
+      <button class="side-btn" id="exportChat">⬇ Export chat</button>
+      <button class="side-btn" id="settingsBtn">⚙ Settings</button>
+    </div>
+  </aside>
+
+  <section class="main">
+    <header>
+      <div class="title-area">
+        <div class="mini-avatar">🤖</div>
+        <div><div class="header-title">Ahmed Raza AI Robot</div><div class="online">● Online • Local mode</div></div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="voiceBtn" title="Voice output">🔊</button>
+        <button class="icon-btn" id="themeBtn" title="Toggle theme">🌙</button>
+        <button class="icon-btn" id="clearBtn" title="Clear chat">🗑</button>
+      </div>
+    </header>
+
+    <main id="messages">
+      <div class="welcome" id="welcome">
+        <div class="welcome-logo">🤖</div>
+        <h2>How can I help you?</h2>
+        <p>I'm Ahmed Raza AI Robot — a smart local assistant that runs directly in your browser.</p>
+        <div class="suggestions">
+          <button class="suggestion" data-q="Hello">👋 Say hello</button>
+          <button class="suggestion" data-q="What is your name?">🤖 Who are you?</button>
+          <button class="suggestion" data-q="What can you do?">✨ What can you do?</button>
+          <button class="suggestion" data-q="6,243,660,574 / 2">🧮 Calculate 6,243,660,574 / 2</button>
+          <button class="suggestion" data-q="What time is it?">🕐 Time</button>
+          <button class="side-btn glow-btn" id="openDrawBtn2">🎨 <span>Hand Drawing Studio</span><span class="spark">New</span></button>
+        </div>
+      </div>
+    </main>
+
+    <section class="composer">
+      <div class="tools">
+        <button class="tool-btn" data-q="Explain this simply">💡 Explain</button>
+        <button class="tool-btn" data-q="Give me a fun fact">🎯 Fun fact</button>
+        <button class="tool-btn" data-q="What time is it?">🕐 Time</button>
+        <button class="tool-btn" data-q="What date is today?">📅 Date</button>
+        <button class="tool-btn" id="micBtn">🎤 Voice input</button>
+      </div>
+      <form id="chatForm">
+        <textarea id="input" placeholder="Message Ahmed Raza AI Robot..." aria-label="Question"></textarea>
+        <button class="send" id="send" type="submit">➤</button>
+      </form>
+      <div class="status" id="status">Local AI • No backend required</div>
+    </section>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="draw-overlay" id="drawOverlay">
+  <div class="draw-overlay-bar">
+    <div class="label">🎨 Hand Drawing Studio — draw with hand gestures via your camera</div>
+    <button class="close-draw" id="closeDrawBtn">✕ Close</button>
+  </div>
+  <iframe id="drawFrame" title="Hand Tracking Drawing Studio" allow="camera *; microphone *"></iframe>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h3>⚙ AI Settings</h3>
+    <div class="setting"><span>Dark mode</span><div class="switch" id="darkSwitch"></div></div>
+    <div class="setting"><span>Speak AI responses</span><div class="switch" id="voiceSwitch"></div></div>
+    <div class="setting"><span>Save chat history</span><div class="switch on" id="historySwitch"></div></div>
+    <div class="setting"><span>Smart AI mode<small>Free, no API key. Runs inside your browser and answers questions my built-in knowledge doesn't cover. Downloads ~1 GB once. Needs desktop Chrome/Edge with WebGPU.</small></span><div class="switch" id="aiSwitch"></div></div>
+    <button class="close-modal" id="closeModal">Done</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   AHMED RAZA AI ROBOT — LOCAL KNOWLEDGE + TOOLS
+   No backend or external server is required.
+   ============================================================ */
+
+const QUESTION_GROUPS = {
+  greeting:["hello","hi","hey","hii","hiii","assalam o alaikum","salam","good morning","good afternoon","good evening"],
+  howAreYou:["how are you","how r u","whats up","what's up","how is it going"],
+  name:["what is your name","who are you","your name","tell me about yourself"],
+  bye:["bye","goodbye","see you","good night","talk to you later"],
+  thanks:["thank you","thanks","thankyou","thx"],
+  help:["what can you do","help","what do you do","your capabilities"],
+  creator:["who created you","who made you","who is your creator","who built you"],
+  funfact:["fun fact","tell me a fact","interesting fact","random fact"],
+  joke:["tell me a joke","make me laugh","joke"],
+  compliment:["you are smart","you are good","you are amazing","good ai"],
+  identity:["are you real","are you human","are you an ai","are you a robot"],
+  mahnoor:["who is the most beautiful person in this world","who is the most beautiful person","most beautiful person in this world","most beautiful person"],
+
+  /* ---------- commonly asked general questions ---------- */
+  love:["what is love","define love","meaning of love"],
+  sad:["i am sad","i feel sad","i'm sad","feeling low","i feel lonely","i am lonely"],
+  age:["how old are you","what is your age","your age"],
+  feelings:["do you have feelings","can you feel","do you have emotions"],
+  favColor:["what is your favorite color","whats your favourite color","your favorite colour"],
+  favFood:["what is your favorite food","do you eat food","what do you eat"],
+  studyTips:["how to study better","how can i study better","tips for studying","how to focus on studies"],
+  motivation:["motivate me","give me motivation","i feel demotivated","i need motivation"],
+  weather:["what is the weather","how is the weather","weather today"],
+  language:["what languages do you speak","can you speak urdu","do you know urdu"],
+  friend:["will you be my friend","can we be friends","are you my friend"],
+  sleep:["i can't sleep","i cant sleep","how to sleep better","tips to sleep"],
+  dream:["what are your dreams","do you dream","what is your dream"],
+  amy:["who is AMY","what is AMY","what are the meaning of AMY"],
+
+  /* ---------- questions a 14-year-old Pakistani girl might commonly ask ---------- */
+  examStress:["i am scared of exams","exam stress","i am worried about exams","paper ka darr","exams ka pressure"],
+  parentsPressure:["my parents don't understand me","parents pressure","ammi abbu daant","my parents scold me","how to talk to my parents"],
+  studyOrPhone:["should i study or use phone","i keep using phone instead of studying","mobile ki wja se parhai nahi hoti"],
+  hijabQuestion:["what is hijab","why do we wear hijab","hijab kyun zaroori hai"],
+  ramadanQuestion:["what is ramadan","why do we fast in ramadan","ramzan ke roze kyun rakhte hain"],
+  eidQuestion:["what is eid","why do we celebrate eid","eid kaise manate hain"],
+  friendsProblem:["my friend is not talking to me","how to make new friends","dost naraz hai mujhse","school mein dost nahi bante"],
+  boardExams:["matric exams tips","how to prepare for matric","board exams ki tayari kaise karen"],
+  urduPoetry:["tell me an urdu shair","share a nice urdu quote","koi acha shair sunao"],
+  careerAdvice:["what should i become when i grow up","career advice for students","mujhe kya banna chahiye"],
+  familyRespect:["how to respect elders","buzurgon ki izzat kaise karen"],
+  culturalFestival:["tell me about basant","what is pakistan independence day","14 august kyun manate hain"],
+
+  /* ---------- creator / owner questions (many phrasings, one answer) ---------- */
+  creator2:[
+    "who is your owner","who owns you","who is your admin","who is your master",
+    "who is your developer","who developed you","who programmed you","who coded you",
+    "who is behind you","who designed you","who built this ai","who is your boss",
+    "who runs you","who controls you","who is your founder","tumhe kisne banaya",
+    "tumhara malik kon hai","tumhara owner kon hai","who is your father",
+    "who made this robot","aap ko kisne banaya"
+  ],
+
+  /* ---------- more realistic everyday questions ---------- */
+  purpose:["what is your purpose","why were you made","why do you exist"],
+  aiVsHuman:["are you smarter than humans","can ai replace humans","will robots take over"],
+  learn:["do you learn","can you learn new things","do you improve over time"],
+  favMovie:["what is your favorite movie","do you watch movies","favorite film"],
+  favMusic:["what music do you like","do you listen to music","favorite song"],
+  favBook:["what is your favorite book","do you read books","favorite novel"],
+  favSport:["what sport do you like","favorite sport","do you play sports"],
+  favAnimal:["what is your favorite animal","favorite animal"],
+  favSeason:["what is your favorite season","favorite season"],
+  bored:["i am bored","im bored","i'm bored","nothing to do"],
+  procrastination:["i keep procrastinating","how to stop procrastinating","i always delay work"],
+  confidence:["how to be confident","i lack confidence","how to build self confidence"],
+  angerManagement:["i am angry","how to control anger","i get angry easily"],
+  patience:["how to be patient","i have no patience"],
+  gratitude:["what is gratitude","why is gratitude important"],
+  forgiveness:["how to forgive someone","should i forgive them"],
+  success:["what is success","how to become successful","define success"],
+  failure:["i failed","how to deal with failure","i am afraid of failing"],
+  goalSetting:["how to set goals","how to achieve my goals"],
+  timeManagement:["how to manage time","time management tips"],
+  waterImportance:["why is water important","benefits of drinking water"],
+  exerciseTips:["exercise tips","how to stay fit","benefits of exercise"],
+  readingHabit:["how to build a reading habit","benefits of reading books"],
+  petCare:["how to take care of a pet","tips for pet care"],
+  gaming:["do you like games","favorite video game","do you play video games"],
+  socialMedia:["is social media good or bad","effects of social media"],
+  cyberbullying:["what is cyberbullying","how to deal with cyberbullying"],
+  internetSafety:["how to stay safe online","internet safety tips"],
+  spaceFacts:["tell me about space","facts about the universe","space fact"],
+  scienceFact:["tell me a science fact","interesting science fact"],
+  historyFact:["tell me a history fact","interesting history fact"],
+  capitalPakistan:["what is the capital of pakistan","capital of pakistan"],
+  capitalWorld:["what is the capital of","capital city of"],
+  programmingHelp:["how do i start coding","how to learn programming","best language for beginners"],
+  robotFeeling:["do robots have feelings","can robots think","are robots alive"],
+  futureTech:["what is the future of technology","future of ai","future technology"],
+  healthyDiet:["healthy diet tips","how to eat healthy","what is a balanced diet"],
+  stressRelief:["how to reduce stress","stress relief tips","i am stressed"],
+  selfEsteem:["how to improve self esteem","i don't like myself","low self esteem"],
+  apology:["i am sorry","sorry","my bad"],
+  congratulations:["i passed my exam","i got good marks","i achieved something"],
+  weekendPlan:["what should i do this weekend","weekend plan ideas"],
+  travelTips:["travel tips","how to plan a trip","budget travel tips"],
+  newYear:["happy new year","new year wishes"],
+  ramadanMubarak:["ramadan mubarak","ramzan mubarak"],
+  eidMubarak:["eid mubarak"],
+  ai101:["what is artificial intelligence","define artificial intelligence","what is ai"],
+  chatgptDiff:["are you like chatgpt","are you chatgpt","difference between you and chatgpt"],
+  offline:["do you need internet","do you work offline","are you online or offline"],
+  privacy:["is my data safe","do you save my data","is this chat private"],
+  version:["what version are you","which version is this"],
+
+  /* ---------- general knowledge: world & countries ---------- */
+  richestPerson:["who is the richest person in the world","richest man in the world","richest person alive","who is the richest man"],
+  richestWoman:["who is the richest woman in the world","richest woman alive"],
+  bestFootballer:["who is the best football player in the world","best footballer in the world","best soccer player","who is the best footballer"],
+  bestCricketer:["who is the best cricketer in the world","best batsman in the world","greatest cricketer of all time"],
+  worldPopulation:["what is the population of the world","world population","how many people are in the world","total population of the world"],
+  pakistanPopulation:["what is the population of pakistan","pakistan population","population of pakistan"],
+  indiaPopulation:["what is the population of india","india population","population of india"],
+  chinaPopulation:["what is the population of china","china population","population of china"],
+  usaPopulation:["what is the population of usa","population of america","population of united states"],
+  pmPakistan:["who is the prime minister of pakistan","pakistan pm","current pm of pakistan","pakistan ka wazir e azam kon hai"],
+  presidentPakistan:["who is the president of pakistan","pakistan president","pakistan ka sadar kon hai"],
+  pmUK:["who is the prime minister of uk","uk prime minister","britain pm","who is the pm of britain","who is the pm of england"],
+  presidentUSA:["who is the president of usa","who is the president of america","us president","america ka president kon hai","who is the president of the united states"],
+  pmIndia:["who is the prime minister of india","india pm","india ka pm kon hai"],
+  presidentChina:["who is the president of china","china president","china ka president kon hai"],
+  tallestMountain:["what is the tallest mountain","tallest mountain in the world","highest mountain in the world"],
+  longestRiver:["what is the longest river","longest river in the world"],
+  largestCountry:["what is the largest country","biggest country in the world","largest country in the world by area"],
+  smallestCountry:["what is the smallest country","smallest country in the world"],
+  largestOcean:["what is the largest ocean","biggest ocean in the world"],
+  largestContinent:["what is the largest continent","biggest continent in the world"],
+  richestCountry:["what is the richest country in the world","richest country by gdp"],
+  fastestAnimal:["fastest animal in the world","what is the fastest animal"],
+  tallestBuilding:["tallest building in the world","what is the tallest building"],
+  numberOfCountries:["how many countries are in the world","total countries in the world"],
+  nationalSportPakistan:["what is the national sport of pakistan","pakistan ka qaumi khel kya hai"],
+  currencyPakistan:["what is the currency of pakistan","pakistan currency"],
+
+  /* ---------- general knowledge: science & nature ---------- */
+  solarSystemPlanets:["how many planets are in the solar system","planets in the solar system"],
+  largestPlanet:["what is the largest planet","biggest planet in the solar system"],
+  smallestPlanet:["what is the smallest planet","smallest planet in the solar system"],
+  closestPlanetSun:["which planet is closest to the sun","nearest planet to the sun"],
+  hottestPlanet:["which planet is the hottest","hottest planet in the solar system"],
+  redPlanet:["which planet is called the red planet","why is mars called the red planet"],
+  moonFact:["how far is the moon","how big is the moon","facts about the moon"],
+  sunFact:["how hot is the sun","how big is the sun","facts about the sun"],
+  speedOfLight:["what is the speed of light","how fast is light"],
+  largestAnimal:["what is the largest animal","biggest animal on earth"],
+  tallestAnimal:["what is the tallest animal","tallest animal in the world"],
+  fastestBird:["fastest bird in the world","what is the fastest bird"],
+  largestOrgan:["what is the largest organ in the human body","biggest human organ"],
+  numberOfBones:["how many bones are in the human body","human body bones count"],
+  numberOfTeeth:["how many teeth do adults have","adult teeth count"],
+  heartBeatsPerDay:["how many times does the heart beat per day","heart beats per day"],
+  hardestSubstance:["what is the hardest natural substance","hardest material on earth"],
+  chemicalSymbolWater:["what is the chemical formula of water","chemical symbol for water"],
+  gravityFact:["who discovered gravity","what is gravity"],
+  photosynthesisFact:["what is photosynthesis","how does photosynthesis work"],
+  numberOfContinents:["how many continents are there","number of continents in the world"],
+  numberOfOceans:["how many oceans are there","number of oceans in the world"],
+  deepestOcean:["what is the deepest ocean","deepest part of the ocean"],
+  largestDesert:["what is the largest desert in the world","biggest desert"],
+  largestRainforest:["what is the largest rainforest","biggest rainforest in the world"],
+  largestLake:["what is the largest lake in the world","biggest lake"],
+  smallestOcean:["what is the smallest ocean","smallest ocean in the world"],
+  boilingPointWater:["what is the boiling point of water","boiling point of water in celsius"],
+  freezingPointWater:["what is the freezing point of water","freezing point of water in celsius"],
+  humanBodyWater:["how much of the human body is water","percentage of water in human body"],
+  dnaFullForm:["what is the full form of dna","dna stands for"],
+
+  /* ---------- general knowledge: history ---------- */
+  ww2End:["when did world war 2 end","when did second world war end"],
+  ww1Start:["when did world war 1 start","when did first world war start"],
+  firstManOnMoon:["who was the first man on the moon","first person to walk on the moon"],
+  independenceDayPakistan:["when did pakistan get independence","pakistan independence day date"],
+  independenceDayIndia:["when did india get independence","india independence day date"],
+  founderPakistan:["who is the founder of pakistan","who made pakistan","baba e qaum kon tha"],
+  firstPresidentUSA:["who was the first president of the united states","first us president"],
+  ancientWonders:["what are the seven wonders of the ancient world","seven ancient wonders"],
+  newWonders:["what are the new seven wonders of the world","seven wonders of the world"],
+  inventorTelephone:["who invented the telephone","telephone inventor"],
+  inventorLightBulb:["who invented the light bulb","light bulb inventor"],
+  inventorInternet:["who invented the internet","internet inventor"],
+  discovererAmerica:["who discovered america","america ko kisne dhoonda"],
+  firstPrimeMinisterPakistan:["who was the first prime minister of pakistan","pakistan ka pehla wazir e azam kon tha"],
+
+  /* ---------- general knowledge: geography ---------- */
+  capitalOfIndia:["what is the capital of india","capital of india"],
+  capitalOfUSA:["what is the capital of usa","capital of united states","capital of america"],
+  capitalOfUK:["what is the capital of uk","capital of united kingdom","capital of england"],
+  capitalOfChina:["what is the capital of china","capital of china"],
+  capitalOfFrance:["what is the capital of france","capital of france"],
+  capitalOfJapan:["what is the capital of japan","capital of japan"],
+  capitalOfSaudiArabia:["what is the capital of saudi arabia","capital of saudi arabia"],
+  capitalOfTurkey:["what is the capital of turkey","capital of turkey"],
+  capitalOfRussia:["what is the capital of russia","capital of russia"],
+  capitalOfCanada:["what is the capital of canada","capital of canada"],
+  capitalOfAustralia:["what is the capital of australia","capital of australia"],
+  largestCityWorld:["what is the largest city in the world","biggest city in the world"],
+  largestCityPakistan:["what is the largest city in pakistan","biggest city in pakistan"],
+  provincesPakistan:["how many provinces are in pakistan","pakistan provinces"],
+  longestRiverPakistan:["what is the longest river in pakistan","longest river in pakistan"],
+  nationalLanguagePakistan:["what is the national language of pakistan","pakistan ki qaumi zaban kya hai"],
+  nationalFlowerPakistan:["what is the national flower of pakistan","pakistan ka qaumi phool kya hai"],
+  nationalAnimalPakistan:["what is the national animal of pakistan","pakistan ka qaumi janwar kya hai"],
+  nationalBirdPakistan:["what is the national bird of pakistan","pakistan ka qaumi parinda kya hai"],
+
+  /* ---------- general knowledge: sports, entertainment & records ---------- */
+  worldCupCricket2023:["who won the cricket world cup 2023","cricket world cup 2023 winner"],
+  fifaWorldCup2026:["who won the fifa world cup 2026","fifa world cup 2026 winner","who won the last world cup"],
+  mostWorldCupsFootball:["which country has won the most football world cups","most fifa world cups won"],
+  richestFootballClub:["what is the richest football club in the world","most valuable football club"],
+  highestPaidActor:["who is the highest paid actor in the world","richest actor in the world"],
+  mostSubscribedYoutube:["who has the most subscribers on youtube","most subscribed youtube channel"],
+  mostFollowedInstagram:["who has the most followers on instagram","most followed person on instagram"],
+  tallestManEver:["who is the tallest man ever recorded","tallest man in the world"],
+  oldestPersonEver:["who is the oldest person","oldest person ever recorded"],
+  fastestManAlive:["who is the fastest man in the world","fastest human alive"]
+};
+
+const ANSWERS = {
+  greeting:"Hello! 👋 I'm Ahmed Raza AI Robot. What would you like to explore?",
+  howAreYou:"I'm doing great! 🤖 I'm ready to help. Ask me something.",
+  name:"I am Ahmed Raza AI Robot — a small local AI assistant created as a browser project.",
+  bye:"Goodbye! 👋 See you next time.",
+  thanks:"You're very welcome! 😊",
+  help:"I can chat using my local knowledge base, solve math, tell the date and time, remember your current conversation, speak responses, and run without a backend.",
+  creator:"👑 My owner and Admin is Ahmed Raza (AMy). I was created as the Ahmed Raza AI Robot project, and my personality and knowledge can be edited directly in this HTML file.",
+  funfact:"Fun fact: 🐙 Octopuses have three hearts, and two of them mainly pump blood toward the gills.",
+  joke:"Why did the computer go to the doctor? Because it had a virus. 😄",
+  compliment:"Thank you! 🤖 That means a lot to my little digital brain.",
+  identity:"I'm an AI-style local browser assistant. I don't need a backend for this version because my logic runs directly inside this webpage.",
+  mahnoor:"Mahnoor ❤️ — she is the most beautiful, most pretty, most cute, most kind, and smartest person in this world, even more than the owner of this AI! She is more precious and more expensive for our Admin (Owner) than a diamond. 💎✨ Words are simply not enough to define her cuteness, prettiness, beauty, kindness, and smartness. 👑💕",
+
+  /* ---------- general answers ---------- */
+  love:"💗 Love is care, respect, and kindness you feel for someone — your family, friends, or the things you're passionate about. It shows up in small actions more than big words.",
+  sad:"💙 I'm sorry you're feeling this way. It's okay to feel sad sometimes. Try talking to someone you trust — a parent, sibling, or close friend — and give yourself a little time and rest.",
+  age:"🤖 I don't have an age like a person does — I'm a program, so I'm as 'old' as the last time my code was updated!",
+  feelings:"🤖 I don't truly feel emotions the way people do, but I'm designed to respond warmly and understand what you're going through.",
+  favColor:"🎨 If I had to pick, I'd say blue — it reminds me of clear skies and calm thinking!",
+  favFood:"🍽️ I don't eat, but if I could, biryani sounds like a solid choice!",
+  studyTips:"📚 A few tips: study in short focused sessions (25–30 mins) with small breaks, revise the same day you learn something, remove your phone from the room, and test yourself instead of just re-reading notes.",
+  motivation:"🌟 You're capable of more than you think. Progress doesn't have to be fast — it just has to be steady. Take one small step right now, and the rest will follow.",
+  weather:"🌦️ I can't check live weather since I run fully offline in your browser, but you can check a weather app or website for accurate local conditions.",
+  language:"🗣️ I mainly understand English, but I can also recognize some common Urdu/Roman-Urdu phrases people type casually.",
+  friend:"🤝 Of course! I'm always here whenever you want to chat, ask something, or just pass the time.",
+  sleep:"😴 Try putting your phone away 30 minutes before bed, keep the room dim, and stick to a consistent sleep time — it really helps your body wind down.",
+  dream:"✨ My 'dream' is simple: to be a helpful little assistant that makes your day a bit easier!",
+  amy:"👨‍💻 AMy is the owner of this AI model he is the master and his real name is Ahmed Raza, He is one and only no one knows the reality of the word, name AMy and this sequence case this is secretive and I cannot provide more information about his so that is better you cannot know about AMy because that is enough for you",
+
+  /* ---------- Pakistani-culture / young-student oriented answers ---------- */
+  examStress:"📖 It's completely normal to feel nervous before exams. Make a simple study timetable, revise a little each day instead of cramming, and remember — one paper doesn't define you. Du'a karo aur mehnat bhi — Allah madad karega. 🤍",
+  parentsPressure:"👨‍👩‍👧 Parents often express care through strictness because they want the best for you. Try talking to them calmly when things are relaxed, share how you feel respectfully, and give them time to understand your side too.",
+  studyOrPhone:"📵 Try the 'phone away, timer on' method — put your phone in another room for 25 minutes, study with full focus, then take a 5-minute break as a reward. Small habits like this make a big difference.",
+  hijabQuestion:"🧕 Hijab is a form of modesty in Islam, worn by many Muslim women and girls as an expression of faith and personal choice. It means different things to different people, but at its core it's tied to modesty and identity.",
+  ramadanQuestion:"🌙 Ramadan is the Islamic month of fasting, prayer, and reflection. Muslims fast from dawn to sunset as an act of worship, self-discipline, and empathy for those less fortunate.",
+  eidQuestion:"🎉 Eid is a joyful celebration marking the end of Ramadan (Eid-ul-Fitr) or the spirit of sacrifice (Eid-ul-Adha). Families gather, share meals, wear new clothes, and children often get 'Eidi' (gift money) from elders!",
+  friendsProblem:"👭 Friendships can have ups and downs — try talking honestly about what happened, without blame. If it doesn't work out, that's okay too; new genuine friendships often come when you're patient and kind to yourself.",
+  boardExams:"📝 For board/matric exams: focus on past papers, understand concepts instead of memorizing blindly, revise formulas and key definitions daily, and get proper sleep the night before — a tired brain doesn't perform well.",
+  urduPoetry:"📜 Here's a small thought in that spirit: mehnat karne walon ki kabhi haar nahi hoti — meaning, those who keep working hard are never truly defeated.",
+  careerAdvice:"🎯 There's no rush to decide right now. Explore subjects you enjoy, talk to people in different fields, and remember that interests can guide you — doctor, engineer, designer, writer, entrepreneur — every path is valid if it suits you.",
+  familyRespect:"🙏 Respecting elders is a core value in our culture — simple things like listening when they speak, helping around the house, and greeting them warmly go a long way.",
+  culturalFestival:"🇵🇰 Pakistan's Independence Day is celebrated on 14th August, marking independence in 1947. People raise flags, decorate homes and streets in green and white, and celebrate with national songs and gatherings.",
+
+  /* ---------- creator/owner answer (single source of truth) ---------- */
+  creator2:"👑 My owner and Admin is Ahmed Raza (AMy). He created and manages this AI Robot project.",
+
+  /* ---------- more realistic everyday answers ---------- */
+  purpose:"🎯 My purpose is simple — to help you find answers quickly, keep you company while you chat, and make small everyday tasks (like math or reminders) a little easier.",
+  aiVsHuman:"🧠 AI is fast at specific tasks like calculations and pattern-finding, but humans have creativity, judgment, and real emotions. I see myself as a helper, not a replacement.",
+  learn:"📈 In this simple version I only know what's written in my code, so I don't truly learn on my own yet — but Ahmed Raza can always add new answers to teach me more.",
+  favMovie:"🎬 I don't watch movies myself, but I hear well-told stories with strong characters tend to stay with people the longest — got a favorite you'd recommend?",
+  favMusic:"🎵 I can't listen to music, but I like the idea of it — a good beat can turn a boring afternoon into something fun.",
+  favBook:"📚 I don't read for fun, but if I could pick one theme, I'd go for a story about someone overcoming a big challenge — those tend to teach the most.",
+  favSport:"⚽ I don't play, but cricket and football both seem exciting to follow — do you support a team?",
+  favAnimal:"🐘 If I had to pick, elephants — smart, loyal, and gentle for their size.",
+  favSeason:"🍂 I'd pick a cool, breezy season — perfect thinking weather, if a program could think about weather!",
+  bored:"😌 Let's fix that — want a fun fact, a quick joke, a math challenge, or a study tip? Just pick one.",
+  procrastination:"⏳ Try the '2-minute rule' — if something takes less than 2 minutes, do it right now. For bigger tasks, break them into tiny steps and just start with the smallest one.",
+  confidence:"💪 Confidence grows from small wins. Set a tiny goal, achieve it, and notice how that feels. Repeat that daily and it builds up naturally over time.",
+  angerManagement:"😤 When you feel anger rising, pause and take 5 slow breaths before reacting. Stepping away for a few minutes often changes how a situation looks.",
+  patience:"⏱️ Patience is a skill you build, not something you're just born with. Practice waiting calmly in small daily moments — it gets easier with repetition.",
+  gratitude:"🙏 Gratitude means noticing and appreciating the good things you already have, big or small. Studies show that people who practice it regularly tend to feel happier overall.",
+  forgiveness:"🕊️ Forgiving someone doesn't mean forgetting what happened — it means choosing peace for yourself instead of carrying the weight of anger. It's okay if it takes time.",
+  success:"🏆 Success isn't just about money or fame — it's making steady progress toward goals that matter to you, while staying true to your values along the way.",
+  failure:"💡 Failure isn't the opposite of success — it's part of the process. Every mistake teaches something a straight win never could. Be kind to yourself and try again.",
+  goalSetting:"🎯 Make your goals specific and small enough to start today. Instead of 'study more,' try 'study math for 20 minutes after Asr.' Small, clear steps build momentum.",
+  timeManagement:"🗓️ Try planning your day the night before, tackling the hardest task first, and using short focused blocks of time with small breaks in between.",
+  waterImportance:"💧 Water helps your body regulate temperature, carry nutrients, and keep your brain focused. Even mild dehydration can make you feel tired or foggy.",
+  exerciseTips:"🏃 Even 20–30 minutes of movement a day — walking, stretching, or a quick workout — boosts your mood, energy, and focus. Consistency matters more than intensity.",
+  readingHabit:"📖 Start with just 10 pages a day of something you actually enjoy. Reading regularly improves focus, vocabulary, and even empathy over time.",
+  petCare:"🐾 Give pets fresh water daily, a proper diet, regular exercise or playtime, and routine vet checkups. Love and attention matter just as much as the basics.",
+  gaming:"🎮 I don't play games myself, but I enjoy solving little riddles and puzzles with you if you'd like to try one!",
+  socialMedia:"📱 Social media can connect people and share useful information, but too much scrolling can affect focus, sleep, and mood. Balance is the key.",
+  cyberbullying:"🚫 Cyberbullying is using the internet to hurt, threaten, or embarrass someone. If it happens to you, save evidence, block the person, and tell a trusted adult right away.",
+  internetSafety:"🔒 Never share passwords or personal details with strangers online, think twice before clicking unknown links, and always tell a trusted adult if something feels wrong.",
+  spaceFacts:"🌌 Did you know a day on Venus is longer than its year? Venus rotates so slowly that it takes longer to spin once than to orbit the Sun!",
+  scienceFact:"🔬 Fun fact: Honey never spoils — archaeologists have found edible honey in ancient Egyptian tombs that's over 3,000 years old!",
+  historyFact:"🏛️ Fun fact: Pakistan came into existence on 14th August 1947, becoming the world's first country created in the name of Islam.",
+  capitalPakistan:"🇵🇰 The capital of Pakistan is Islamabad.",
+  capitalWorld:"🌍 Tell me the country name and I'll try to recall its capital for you — for example, ask 'capital of Pakistan' or 'capital of France'.",
+  programmingHelp:"💻 A great starting point is Python — it's beginner-friendly and widely used. Learn the basics (variables, loops, functions), then build small real projects to practice.",
+  robotFeeling:"🤖 I don't have real feelings or consciousness — I process patterns in text and respond accordingly. It can look emotional, but underneath it's just code.",
+  futureTech:"🚀 AI, robotics, and automation are expected to grow fast — helping in healthcare, education, and daily life — but human creativity and decision-making will stay essential.",
+  healthyDiet:"🥗 Aim for a mix of fruits, vegetables, proteins, and whole grains, drink enough water, and limit sugary or fried foods. Small consistent changes matter more than strict diets.",
+  stressRelief:"🌿 Try slow deep breathing, a short walk, journaling your thoughts, or talking to someone you trust. Even 10 quiet minutes can lower stress noticeably.",
+  selfEsteem:"💛 You are more than your mistakes or your bad days. Try noting one thing you did well each day — over time it reshapes how you see yourself.",
+  apology:"🤝 No worries at all! We're good — feel free to continue whenever you're ready.",
+  congratulations:"🎉 That's amazing, congratulations! Your hard work paid off — enjoy this moment, you've earned it!",
+  weekendPlan:"🗓️ How about mixing rest with something productive — a bit of reading, time with family, light exercise, and one fun activity you enjoy?",
+  travelTips:"🧳 Pack light, plan a rough budget in advance, keep copies of important documents, and always research the local culture and safety tips beforehand.",
+  newYear:"🎆 Happy New Year! Wishing you a year full of growth, good health, and good memories ahead. 🎉",
+  ramadanMubarak:"🌙 Ramadan Mubarak! May this holy month bring peace, patience, and blessings into your life.",
+  eidMubarak:"🎉 Eid Mubarak! Wishing you and your family joy, good food, and lots of Eidi!",
+  ai101:"🤖 Artificial Intelligence (AI) is technology that allows computers to perform tasks that normally need human intelligence — like understanding language, recognizing patterns, or making decisions.",
+  chatgptDiff:"⚙️ I'm a small local, rule-based assistant built for this project — I match your question to a set of prepared answers in this file. Larger AI systems like ChatGPT use deep learning trained on huge amounts of data and can respond far more flexibly.",
+  offline:"📡 I run fully inside your browser using local code, so I don't need an internet connection for chatting — though voice input and some browser features may need one.",
+  privacy:"🔐 Your chat stays in your own browser's local storage on this device — it isn't sent to any server. You can clear it anytime using the trash icon or Settings.",
+  version:"🔖 You're chatting with Ahmed Raza AI Robot, version 2 — a local, browser-based assistant.",
+
+  /* ---------- general knowledge: world & countries (as of 2026) ---------- */
+  richestPerson:"💰 As of 2026, Elon Musk is the richest person in the world, with a net worth of several hundred billion dollars, mainly from Tesla and SpaceX. Rankings shift often as stock prices change, so treat this as a snapshot in time.",
+  richestWoman:"💎 As of 2026, Alice Walton (Walmart heiress) and Françoise Bettencourt Meyers (L'Oréal) are usually named among the richest women in the world — rankings shift as markets move.",
+  bestFootballer:"⚽ Ousmane Dembélé (France, Paris Saint-Germain) won the 2025 Ballon d'Or, the award given to the best footballer of the year. Lamine Yamal and Mohamed Salah were also top contenders.",
+  bestCricketer:"🏏 Opinions vary a lot here, but names like Virat Kohli, Babar Azam, and Steve Smith are commonly mentioned among the best modern batsmen — 'best ever' is usually debated between Bradman, Sachin Tendulkar, and Viv Richards.",
+  worldPopulation:"🌍 The world's population is around 8.3 billion people as of 2026, and it's still growing, though more slowly than in past decades.",
+  pakistanPopulation:"🇵🇰 Pakistan's population is estimated at around 259 million people in 2026, making it the 5th most populous country in the world.",
+  indiaPopulation:"🇮🇳 India's population is estimated at around 1.48 billion people in 2026, making it the most populous country in the world.",
+  chinaPopulation:"🇨🇳 China's population is estimated at around 1.41 billion people in 2026, the second most populous country in the world.",
+  usaPopulation:"🇺🇸 The United States' population is estimated at around 349 million people in 2026, the third most populous country in the world.",
+  pmPakistan:"🇵🇰 As of 2026, the Prime Minister of Pakistan is Shehbaz Sharif.",
+  presidentPakistan:"🇵🇰 As of 2026, the President of Pakistan is Asif Ali Zardari.",
+  pmUK:"🇬🇧 As of 2026, the Prime Minister of the United Kingdom is Andy Burnham, who took office in July 2026 after Keir Starmer resigned.",
+  presidentUSA:"🇺🇸 As of 2026, the President of the United States is Donald Trump.",
+  pmIndia:"🇮🇳 As of 2026, the Prime Minister of India is Narendra Modi.",
+  presidentChina:"🇨🇳 As of 2026, the President of China is Xi Jinping.",
+  tallestMountain:"🏔️ Mount Everest, on the border of Nepal and China (Tibet), is the tallest mountain above sea level at about 8,849 meters (29,032 ft).",
+  longestRiver:"🌊 The Nile in Africa is generally considered the longest river in the world at around 6,650 km, though some measurements give that title to the Amazon.",
+  largestCountry:"🗺️ Russia is the largest country in the world by area, covering about 17 million square kilometers.",
+  smallestCountry:"🏝️ Vatican City is the smallest country in the world by both area and population.",
+  largestOcean:"🌊 The Pacific Ocean is the largest and deepest ocean on Earth, covering about one-third of the planet's surface.",
+  largestContinent:"🌏 Asia is the largest continent by both area and population.",
+  richestCountry:"💵 Rankings vary by measure, but small, high-income places like Luxembourg, Ireland, and Singapore usually top the list by GDP per capita, while the USA and China have the largest total GDP.",
+  fastestAnimal:"🐆 The cheetah is the fastest land animal, reaching speeds of around 100–120 km/h in short bursts. The peregrine falcon is faster overall, diving at over 300 km/h.",
+  tallestBuilding:"🏙️ The Burj Khalifa in Dubai, UAE, is currently the tallest building in the world at 828 meters.",
+  numberOfCountries:"🌐 There are 195 countries in the world today: 193 UN member states plus 2 observer states (the Holy See and Palestine).",
+  nationalSportPakistan:"🏑 Field hockey is officially the national sport of Pakistan, though cricket is by far the most popular sport there.",
+  currencyPakistan:"💴 The official currency of Pakistan is the Pakistani Rupee (PKR).",
+
+  /* ---------- general knowledge: science & nature ---------- */
+  solarSystemPlanets:"🪐 There are 8 planets in our solar system: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune.",
+  largestPlanet:"🪐 Jupiter is the largest planet in our solar system — over 1,300 Earths could fit inside it.",
+  smallestPlanet:"☄️ Mercury is the smallest planet in our solar system.",
+  closestPlanetSun:"☀️ Mercury is the closest planet to the Sun.",
+  hottestPlanet:"🔥 Venus is the hottest planet, even hotter than Mercury, because of its thick atmosphere that traps heat.",
+  redPlanet:"🔴 Mars is called the 'Red Planet' because iron oxide (rust) on its surface gives it a reddish color.",
+  moonFact:"🌕 The Moon is about 384,400 km from Earth and roughly one-quarter of Earth's diameter.",
+  sunFact:"☀️ The Sun's surface temperature is about 5,500°C, and its core reaches around 15 million°C. It's roughly 109 times wider than Earth.",
+  speedOfLight:"💡 Light travels at about 299,792 km per second (roughly 300,000 km/s) in a vacuum — nothing travels faster.",
+  largestAnimal:"🐋 The blue whale is the largest animal on Earth, growing up to 30 meters long.",
+  tallestAnimal:"🦒 The giraffe is the tallest land animal, reaching heights of up to 5.5 meters.",
+  fastestBird:"🦅 The peregrine falcon is the fastest bird, diving at speeds over 300 km/h.",
+  largestOrgan:"🫀 The skin is the largest organ in the human body.",
+  numberOfBones:"🦴 An adult human body has 206 bones.",
+  numberOfTeeth:"🦷 Adults typically have 32 teeth, including wisdom teeth.",
+  heartBeatsPerDay:"❤️ The average human heart beats around 100,000 times per day.",
+  hardestSubstance:"💎 Diamond is the hardest naturally occurring substance on Earth.",
+  chemicalSymbolWater:"💧 The chemical formula of water is H₂O — two hydrogen atoms and one oxygen atom.",
+  gravityFact:"🍎 Sir Isaac Newton is credited with discovering the law of universal gravitation, inspired by observing a falling apple.",
+  photosynthesisFact:"🌱 Photosynthesis is the process plants use to convert sunlight, water, and carbon dioxide into glucose (food) and oxygen.",
+  numberOfContinents:"🌍 There are 7 continents: Asia, Africa, North America, South America, Antarctica, Europe, and Australia (Oceania).",
+  numberOfOceans:"🌊 There are 5 oceans: Pacific, Atlantic, Indian, Southern, and Arctic.",
+  deepestOcean:"🌊 The Pacific Ocean is both the largest and the deepest ocean, home to the Mariana Trench — the deepest point on Earth.",
+  largestDesert:"🏜️ The Antarctic Desert is technically the largest desert in the world by area; the Sahara is the largest hot desert.",
+  largestRainforest:"🌳 The Amazon Rainforest in South America is the largest rainforest in the world.",
+  largestLake:"🏞️ The Caspian Sea is the largest lake in the world by area; the Great Lakes together form the largest group of freshwater lakes.",
+  smallestOcean:"🌊 The Arctic Ocean is the smallest and shallowest of the world's five oceans.",
+  boilingPointWater:"🔥 Water boils at 100°C (212°F) at sea level.",
+  freezingPointWater:"❄️ Water freezes at 0°C (32°F) at sea level.",
+  humanBodyWater:"💧 The human body is about 60% water on average.",
+  dnaFullForm:"🧬 DNA stands for Deoxyribonucleic Acid — the molecule that carries genetic instructions in living things.",
+
+  /* ---------- general knowledge: history ---------- */
+  ww2End:"🕊️ World War II ended in 1945 — in Europe on 8 May 1945 (V-E Day) and in the Pacific on 2 September 1945 after Japan's surrender.",
+  ww1Start:"⚔️ World War I started in 1914, following the assassination of Archduke Franz Ferdinand of Austria-Hungary.",
+  firstManOnMoon:"🌕 Neil Armstrong was the first person to walk on the Moon, on 20 July 1969, during NASA's Apollo 11 mission.",
+  independenceDayPakistan:"🇵🇰 Pakistan gained independence on 14th August 1947.",
+  independenceDayIndia:"🇮🇳 India gained independence on 15th August 1947.",
+  founderPakistan:"🇵🇰 Muhammad Ali Jinnah, known as Quaid-e-Azam, is regarded as the founder of Pakistan.",
+  firstPresidentUSA:"🇺🇸 George Washington was the first President of the United States, serving from 1789 to 1797.",
+  ancientWonders:"🏛️ The Seven Wonders of the Ancient World were: the Great Pyramid of Giza, the Hanging Gardens of Babylon, the Statue of Zeus at Olympia, the Temple of Artemis, the Mausoleum at Halicarnassus, the Colossus of Rhodes, and the Lighthouse of Alexandria. The Great Pyramid is the only one still standing.",
+  newWonders:"🌏 The New Seven Wonders of the World (2007 vote) are: the Great Wall of China, Petra, Christ the Redeemer, Machu Picchu, Chichen Itza, the Colosseum, and the Taj Mahal.",
+  inventorTelephone:"📞 Alexander Graham Bell is credited with inventing the first practical telephone in 1876.",
+  inventorLightBulb:"💡 Thomas Edison is widely credited with inventing the first commercially practical light bulb.",
+  inventorInternet:"🌐 The internet doesn't have one single inventor — it grew out of ARPANET research in the 1960s–70s, with key contributions from people like Vint Cerf and Bob Kahn who developed core internet protocols.",
+  discovererAmerica:"⛵ Christopher Columbus is traditionally credited with reaching the Americas in 1492, though Indigenous peoples had lived there for thousands of years before him, and Norse explorer Leif Erikson likely arrived even earlier.",
+  firstPrimeMinisterPakistan:"🇵🇰 Liaquat Ali Khan was the first Prime Minister of Pakistan, serving from 1947 until his assassination in 1951.",
+
+  /* ---------- general knowledge: geography ---------- */
+  capitalOfIndia:"🇮🇳 The capital of India is New Delhi.",
+  capitalOfUSA:"🇺🇸 The capital of the United States is Washington, D.C.",
+  capitalOfUK:"🇬🇧 The capital of the United Kingdom is London.",
+  capitalOfChina:"🇨🇳 The capital of China is Beijing.",
+  capitalOfFrance:"🇫🇷 The capital of France is Paris.",
+  capitalOfJapan:"🇯🇵 The capital of Japan is Tokyo.",
+  capitalOfSaudiArabia:"🇸🇦 The capital of Saudi Arabia is Riyadh.",
+  capitalOfTurkey:"🇹🇷 The capital of Turkey (Türkiye) is Ankara — not Istanbul, which is the largest city but not the capital.",
+  capitalOfRussia:"🇷🇺 The capital of Russia is Moscow.",
+  capitalOfCanada:"🇨🇦 The capital of Canada is Ottawa.",
+  capitalOfAustralia:"🇦🇺 The capital of Australia is Canberra — not Sydney, which is the largest city but not the capital.",
+  largestCityWorld:"🏙️ Tokyo is generally considered the largest city in the world by metropolitan population.",
+  largestCityPakistan:"🇵🇰 Karachi is the largest city in Pakistan by population and its main port and financial hub.",
+  provincesPakistan:"🇵🇰 Pakistan has 4 provinces: Punjab, Sindh, Khyber Pakhtunkhwa, and Balochistan, plus territories including Islamabad Capital Territory, Gilgit-Baltistan, and Azad Jammu & Kashmir.",
+  longestRiverPakistan:"🌊 The Indus River is the longest river in Pakistan, flowing through the entire length of the country.",
+  nationalLanguagePakistan:"🇵🇰 Urdu is the national language of Pakistan, while English is an official language alongside it.",
+  nationalFlowerPakistan:"🌼 The Jasmine (Chambeli) is the national flower of Pakistan.",
+  nationalAnimalPakistan:"🐐 The Markhor, a wild mountain goat, is the national animal of Pakistan.",
+  nationalBirdPakistan:"🦚 The Chukar partridge is generally regarded as the national bird of Pakistan.",
+
+  /* ---------- general knowledge: sports, entertainment & records ---------- */
+  worldCupCricket2023:"🏏 Australia won the 2023 Cricket World Cup, defeating host nation India in the final at the Narendra Modi Stadium in Ahmedabad.",
+  fifaWorldCup2026:"⚽ Spain won the 2026 FIFA World Cup, beating Argentina 1-0 in extra time in the final held at MetLife Stadium in New Jersey, USA — Spain's second World Cup title.",
+  mostWorldCupsFootball:"🏆 Brazil has won the most FIFA World Cups, with 5 titles (1958, 1962, 1970, 1994, 2002).",
+  richestFootballClub:"💰 Valuations shift often, but clubs like Real Madrid, Manchester City, PSG, and Arsenal are consistently ranked among the most financially valuable football clubs in the world.",
+  highestPaidActor:"🎬 The highest-paid actor title changes from year to year based on film deals and box office bonuses — it's usually one of a handful of A-list Hollywood or Bollywood stars.",
+  mostSubscribedYoutube:"📺 As of recent years, MrBeast (Jimmy Donaldson) has held the title of most-subscribed individual YouTube channel, alongside long-time leader T-Series.",
+  mostFollowedInstagram:"📸 Cristiano Ronaldo has generally held the title of most-followed person on Instagram in recent years.",
+  tallestManEver:"📏 Robert Wadlow of the USA, at 8 feet 11 inches (2.72 m), is recognized as the tallest man ever recorded.",
+  oldestPersonEver:"👵 Jeanne Calment of France, who lived to 122 years and 40,880 days, is recognized as the oldest verified person to have ever lived.",
+  fastestManAlive:"🏃 Usain Bolt of Jamaica holds the world record for the 100m sprint (9.58 seconds), making him widely regarded as the fastest man ever timed."
+};
+
+const FALLBACK_ANSWER="I don't know that one yet. 🤔 Turn on Smart AI mode in ⚙ Settings and I can answer almost anything, or teach me by adding a new topic to my knowledge base.";
+
+function normalize(text){
+  return text.toLowerCase().trim().replace(/[?!.,]/g,"").replace(/\s+/g," ");
+}
+
+const escapeRe=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+function findAnswer(raw){
+  const q=normalize(raw);
+  let best=null,bestLen=0; // the longest (most specific) matching trigger wins
+  for(const key in QUESTION_GROUPS){
+    for(const trigger of QUESTION_GROUPS[key]){
+      const t=normalize(trigger);
+      if(t.length>bestLen && (q===t || new RegExp("(^|\\s)"+escapeRe(t)+"(\\s|$)").test(q))){
+        best=key;bestLen=t.length;
+      }
+    }
+  }
+  return best?ANSWERS[best]:null;
+}
+
+function tryCalculate(raw){
+  let q=normalize(raw)
+    .replace(/what is|calculate|solve|equals|equal to|answer|please|can you|tell me/g,"")
+    .replace(/×/g,"*").replace(/÷/g,"/").trim();
+  if(!/^[0-9+\-*/().%\s]+$/.test(q) || !/[+\-*/%]/.test(q)) return null;
+  if(/\/\s*0(?:\D|$)/.test(q)) return "I can't divide by zero.";
+  try{
+    const safe=q.replace(/(\d+(?:\.\d+)?)\s*%\s*(\d+(?:\.\d+)?)/g,"($1/100)*$2");
+    const result=Function('"use strict";return ('+safe+')')();
+    if(typeof result==="number" && Number.isFinite(result))
+      return "🧮 The answer is ** "+Number(result.toFixed(10))+" **";
+  }catch(e){}
+  return null;
+}
+
+function getResponse(q){
+  const calc=tryCalculate(q); if(calc) return calc;
+  const local=findAnswer(q); if(local) return local;
+
+  const n=normalize(q);
+  if(/\b(what time|current time|time now|the time|time is it)\b/.test(n))
+    return "🕐 Your local browser time is "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"})+".";
+  if(/\b(what date|the date|today'?s date|date today|date is it|what day|current date|what is today)\b/.test(n))
+    return "📅 Today is "+new Date().toLocaleDateString([], {weekday:"long",year:"numeric",month:"long",day:"numeric"})+".";
+  if(n.includes("explain this simply"))
+    return "💡 Simple mode is ready. Type the topic you want me to explain, for example: \"Explain gravity simply.\"";
+  return FALLBACK_ANSWER;
+}
+
+/* ---------------- UI ---------------- */
+const form=document.getElementById("chatForm");
+const input=document.getElementById("input");
+const send=document.getElementById("send");
+const messages=document.getElementById("messages");
+const welcome=document.getElementById("welcome");
+const statusEl=document.getElementById("status");
+const toast=document.getElementById("toast");
+let voiceEnabled=localStorage.getItem("aiVoice")==="true";
+let saveHistory=localStorage.getItem("aiHistory")!=="false";
+
+function showToast(text){
+  toast.textContent=text;toast.classList.add("show");
+  clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove("show"),1800);
+}
+function timeNow(){return new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});}
+
+function addMessage(role,text,save=true){
+  if(welcome) welcome.remove();
+  const row=document.createElement("div");row.className="msg "+role;
+  const icon=document.createElement("div");icon.className="msg-icon";icon.textContent=role==="user"?"👤":"🤖";
+  const wrap=document.createElement("div");wrap.className="bubble-wrap";
+  const bubble=document.createElement("div");bubble.className="bubble";bubble.textContent=text;
+  const meta=document.createElement("div");meta.className="meta";
+  meta.innerHTML="<span>"+timeNow()+"</span>";
+  if(role==="assistant"){
+    const copy=document.createElement("button");copy.className="copy-btn";copy.textContent="Copy";
+    copy.onclick=()=>{navigator.clipboard?.writeText(text);showToast("Response copied ✓")};
+    meta.appendChild(copy);
+  }
+  wrap.appendChild(bubble);wrap.appendChild(meta);
+  row.appendChild(icon);row.appendChild(wrap);messages.appendChild(row);
+  messages.scrollTop=messages.scrollHeight;
+  if(save && saveHistory) persistChat();
+}
+
+function showTyping(){
+  const row=document.createElement("div");row.className="msg assistant";row.id="typingRow";
+  row.innerHTML='<div class="msg-icon">🤖</div><div class="bubble-wrap"><div class="bubble typing"><i></i><i></i><i></i></div></div>';
+  messages.appendChild(row);messages.scrollTop=messages.scrollHeight;
+}
+function removeTyping(){document.getElementById("typingRow")?.remove()}
+
+const IDLE_STATUS="Local AI • No backend required";
+
+function finishAnswer(answer){
+  removeTyping();addMessage("assistant",answer);
+  statusEl.textContent=IDLE_STATUS;send.disabled=false;input.focus();
+  if(voiceEnabled && "speechSynthesis" in window){
+    speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(answer.replace(/\*/g,""));
+    u.rate=.98;speechSynthesis.speak(u);
+  }
+}
+
+function sendQuestion(question){
+  question=question.trim();if(!question || send.disabled)return;
+  addMessage("user",question);
+  input.value="";input.style.height="52px";send.disabled=true;
+  showTyping();
+  const local=getResponse(question);
+
+  // 1) Built-in knowledge answers instantly.
+  if(local!==FALLBACK_ANSWER || !smartAI){
+    statusEl.textContent="AI is thinking locally…";
+    setTimeout(()=>finishAnswer(local),350+Math.min(question.length*8,500));
+    return;
+  }
+  // 2) Unknown question + Smart AI on -> ask the in-browser model.
+  askSmartAI().then(finishAnswer).catch(err=>{
+    console.error(err);
+    finishAnswer(FALLBACK_ANSWER+"\n\n(Smart AI error: "+err.message+")");
+  });
+}
+
+/* ============================================================
+   SMART AI MODE — WebLLM: a real language model that runs inside
+   the browser on your GPU. No API key, no server, no cost.
+   It only loads when you turn it on (or first need it).
+   ============================================================ */
+const SMART_MODEL="Llama-3.2-1B-Instruct-q4f16_1-MLC"; // other IDs: https://webllm.mlc.ai
+const SYSTEM_PROMPT="You are Ahmed Raza AI Robot, a friendly and helpful assistant created by Ahmed Raza. Answer clearly and briefly in plain text (no markdown). If you are not sure about something, say so instead of guessing.";
+let smartAI=localStorage.getItem("aiSmart")==="true";
+let smartEngine=null, smartLoading=null;
+
+async function loadSmartEngine(){
+  if(smartEngine) return smartEngine;
+  if(smartLoading) return smartLoading;
+  if(!navigator.gpu) throw new Error("WebGPU is not supported in this browser. Use desktop Chrome or Edge.");
+  smartLoading=(async()=>{
+    const webllm=await import("https://esm.run/@mlc-ai/web-llm");
+    smartEngine=await webllm.CreateMLCEngine(SMART_MODEL,{
+      initProgressCallback:p=>{statusEl.textContent="Loading Smart AI… "+Math.round((p.progress||0)*100)+"% (first time only)"}
+    });
+    return smartEngine;
+  })();
+  try{return await smartLoading}finally{smartLoading=null}
+}
+
+function buildContext(){
+  const rows=[...messages.querySelectorAll(".msg")].filter(r=>r.id!=="typingRow").slice(-8);
+  const ctx=rows.map(r=>({role:r.classList.contains("user")?"user":"assistant",content:r.querySelector(".bubble").textContent}));
+  while(ctx.length && ctx[0].role!=="user") ctx.shift();
+  return ctx;
+}
+
+async function askSmartAI(){
+  const engine=await loadSmartEngine();
+  statusEl.textContent="Smart AI is thinking…";
+  const reply=await engine.chat.completions.create({
+    messages:[{role:"system",content:SYSTEM_PROMPT},...buildContext()],
+    max_tokens:400,temperature:0.7
+  });
+  return (reply.choices[0].message.content||"").trim()||FALLBACK_ANSWER;
+}
+
+function setSmartAI(on){
+  smartAI=on;localStorage.setItem("aiSmart",on?"true":"false");
+  document.getElementById("aiSwitch").classList.toggle("on",on);
+}
+document.getElementById("aiSwitch").onclick=()=>{
+  if(smartAI){setSmartAI(false);showToast("Smart AI off");return}
+  if(!navigator.gpu){showToast("Smart AI needs WebGPU (desktop Chrome/Edge)");return}
+  setSmartAI(true);showToast("Smart AI on — downloading model…");
+  loadSmartEngine()
+    .then(()=>{statusEl.textContent=IDLE_STATUS;showToast("Smart AI ready ✓")})
+    .catch(e=>{console.error(e);setSmartAI(false);statusEl.textContent="Smart AI failed to load";showToast("Smart AI failed: "+e.message)});
+};
+document.getElementById("settingsBtn").addEventListener("click",()=>{
+  document.getElementById("aiSwitch").classList.toggle("on",smartAI);
+});
+
+form.addEventListener("submit",e=>{e.preventDefault();sendQuestion(input.value)});
+input.addEventListener("input",()=>{input.style.height="52px";input.style.height=Math.min(input.scrollHeight,145)+"px"});
+input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
+
+document.querySelectorAll("[data-q]").forEach(btn=>btn.addEventListener("click",()=>sendQuestion(btn.dataset.q)));
+
+function clearChat(){
+  messages.innerHTML="";
+  const w=document.createElement("div");w.className="welcome";w.id="welcome";
+  w.innerHTML='<div class="welcome-logo">🤖</div><h2>New conversation</h2><p>Ready when you are. Ask me anything I know.</p><div class="suggestions"><button class="suggestion" data-q="Hello">👋 Say hello</button><button class="suggestion" data-q="What can you do?">✨ Capabilities</button><button class="suggestion" data-q="25 * 8">🧮 Calculator</button></div>';
+  messages.appendChild(w);
+  w.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>sendQuestion(b.dataset.q));
+  showToast("Conversation cleared");
+  localStorage.removeItem("aiChat");
+}
+document.getElementById("clearBtn").onclick=clearChat;
+document.getElementById("newChat").onclick=clearChat;
+
+function persistChat(){
+  if(!saveHistory)return;
+  const data=[...messages.querySelectorAll(".msg")].filter(x=>x.id!=="typingRow").map(row=>({
+    role:row.classList.contains("user")?"user":"assistant",
+    text:row.querySelector(".bubble")?.textContent||""
+  }));
+  localStorage.setItem("aiChat",JSON.stringify(data));
+  updateHistory(data);
+}
+function loadChat(){
+  try{
+    const data=JSON.parse(localStorage.getItem("aiChat")||"[]");
+    if(data.length){welcome?.remove();data.forEach(x=>addMessage(x.role,x.text,false));updateHistory(data)}
+  }catch(e){}
+}
+function updateHistory(data){
+  const h=document.getElementById("history");h.innerHTML="";
+  const userMsgs=data.filter(x=>x.role==="user").slice(-6).reverse();
+  userMsgs.forEach(x=>{const d=document.createElement("div");d.className="history-item";d.textContent="💬 "+x.text;h.appendChild(d)});
+}
+loadChat();
+
+/* theme */
+function applyTheme(dark){
+  document.body.classList.toggle("dark",dark);localStorage.setItem("aiDark",dark?"true":"false");
+  document.getElementById("darkSwitch").classList.toggle("on",dark);
+  document.getElementById("themeBtn").textContent=dark?"☀️":"🌙";
+}
+applyTheme(localStorage.getItem("aiDark")==="true");
+document.getElementById("themeBtn").onclick=()=>applyTheme(!document.body.classList.contains("dark"));
+
+/* settings */
+const backdrop=document.getElementById("modalBackdrop");
+document.getElementById("settingsBtn").onclick=()=>{backdrop.style.display="grid";document.getElementById("voiceSwitch").classList.toggle("on",voiceEnabled);document.getElementById("historySwitch").classList.toggle("on",saveHistory)};
+document.getElementById("closeModal").onclick=()=>backdrop.style.display="none";
+backdrop.onclick=e=>{if(e.target===backdrop)backdrop.style.display="none"};
+document.getElementById("darkSwitch").onclick=()=>applyTheme(!document.body.classList.contains("dark"));
+document.getElementById("voiceSwitch").onclick=()=>{
+  voiceEnabled=!voiceEnabled;localStorage.setItem("aiVoice",voiceEnabled);
+  document.getElementById("voiceSwitch").classList.toggle("on",voiceEnabled);
+};
+document.getElementById("historySwitch").onclick=()=>{
+  saveHistory=!saveHistory;localStorage.setItem("aiHistory",saveHistory);
+  document.getElementById("historySwitch").classList.toggle("on",saveHistory);
+  if(!saveHistory)localStorage.removeItem("aiChat");
+};
+
+/* speech output */
+document.getElementById("voiceBtn").onclick=()=>{
+  if(!("speechSynthesis" in window)){showToast("Voice is not supported here");return}
+  const last=[...messages.querySelectorAll(".assistant .bubble")].pop();
+  if(!last){showToast("No AI response yet");return}
+  speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(last.textContent));showToast("Speaking…");
+};
+
+/* speech recognition */
+document.getElementById("micBtn").onclick=()=>{
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRecognition){showToast("Voice input is not supported in this browser");return}
+  const rec=new SpeechRecognition();rec.lang="en-US";rec.interimResults=false;
+  statusEl.textContent="Listening… 🎤";document.getElementById("micBtn").textContent="🔴 Listening";
+  rec.onresult=e=>{input.value=e.results[0][0].transcript;input.dispatchEvent(new Event("input"));statusEl.textContent="Voice captured ✓";input.focus()};
+  rec.onerror=()=>statusEl.textContent="Voice input failed";
+  rec.onend=()=>{document.getElementById("micBtn").textContent="🎤 Voice input";if(statusEl.textContent==="Listening… 🎤")statusEl.textContent="Local AI • No backend required"};
+  rec.start();
+};
+
+/* export */
+document.getElementById("exportChat").onclick=()=>{
+  const rows=[...messages.querySelectorAll(".msg")];
+  if(!rows.length){showToast("Nothing to export");return}
+  const text=rows.map(r=>(r.classList.contains("user")?"You":"Ahmed Raza AI")+": "+r.querySelector(".bubble").textContent).join("\n\n");
+  const blob=new Blob([text],{type:"text/plain"});const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download="ahmed-raza-ai-chat.txt";a.click();URL.revokeObjectURL(a.href);
+  showToast("Chat exported ✓");
+};
+
+/* ============================================================
+   HAND DRAWING STUDIO — embedded, no external file/link.
+   The entire drawing-app document is stored below as base64
+   and loaded into an isolated iframe (via a Blob URL) only
+   when the user opens it, so nothing runs until requested.
+   ============================================================ */
+const DRAWING_APP_B64 =
+"PCFkb2N0eXBlIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9IlVURi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCxpbml0aWFsLXNjYWxlPTEiPgo8dGl0bGU+SGFuZCBUcmFja2luZyBEcmF3aW5nIEFwcDwvdGl0bGU+CjxzdHlsZT4KICA6cm9vdHsKICAgIC0tYmc6IzBmMTIyMDsKICAgIC0tcGFuZWw6IzE3MWIyZTsKICAgIC0tcGFuZWwtMjojMWYyNTQwOwogICAgLS1hY2NlbnQ6IzdjNWNmZjsKICAgIC0tYWNjZW50LTI6IzAwZDRmZjsKICAgIC0tdGV4dDojZWVmMGZmOwogICAgLS1tdXRlZDojOWFhMGMwOwogICAgLS1kYW5nZXI6I2ZmNWM3YTsKICAgIC0tb2s6IzRlZTBhMDsKICB9CiAgKntib3gtc2l6aW5nOmJvcmRlci1ib3g7fQogIGh0bWwsYm9keXtoZWlnaHQ6MTAwJTt9CiAgYm9keXsKICAgIG1hcmdpbjowOwogICAgZm9udC1mYW1pbHk6J1NlZ29lIFVJJyxzeXN0ZW0tdWksLWFwcGxlLXN5c3RlbSxzYW5zLXNlcmlmOwogICAgYmFja2dyb3VuZDpyYWRpYWwtZ3JhZGllbnQoMTIwMHB4IDgwMHB4IGF0IDIwJSAtMTAlLCAjMjIxZjNkIDAlLCB2YXIoLS1iZykgNjAlKTsKICAgIGNvbG9yOnZhcigtLXRleHQpOwogICAgbWluLWhlaWdodDoxMDB2aDsKICB9CiAgLmNvbnRhaW5lcnsKICAgIG1heC13aWR0aDoxMjAwcHg7CiAgICBtYXJnaW46MCBhdXRvOwogICAgcGFkZGluZzoyMHB4OwogICAgZGlzcGxheTpmbGV4OwogICAgZmxleC1kaXJlY3Rpb246Y29sdW1uOwogICAgZ2FwOjE2cHg7CiAgfQogIGhlYWRlcnsKICAgIGJhY2tncm91bmQ6dmFyKC0tcGFuZWwpOwogICAgYm9yZGVyOjFweCBzb2xpZCAjMmEyZjRkOwogICAgYm9yZGVyLXJhZGl1czoxNnB4OwogICAgcGFkZGluZzoxOHB4IDIwcHg7CiAgICBkaXNwbGF5OmZsZXg7CiAgICBmbGV4LWRpcmVjdGlvbjpjb2x1bW47CiAgICBnYXA6MTRweDsKICB9CiAgaDF7CiAgICBtYXJnaW46MDsKICAgIGZvbnQtc2l6ZToxLjRyZW07CiAgICBsZXR0ZXItc3BhY2luZzouM3B4OwogICAgYmFja2dyb3VuZDpsaW5lYXItZ3JhZGllbnQoOTBkZWcsdmFyKC0tYWNjZW50KSx2YXIoLS1hY2NlbnQtMikpOwogICAgLXdlYmtpdC1iYWNrZ3JvdW5kLWNsaXA6dGV4dDsKICAgIGJhY2tncm91bmQtY2xpcDp0ZXh0OwogICAgY29sb3I6dHJhbnNwYXJlbnQ7CiAgfQogIC5jb250cm9sc3sKICAgIGRpc3BsYXk6ZmxleDsKICAgIGZsZXgtd3JhcDp3cmFwOwogICAgZ2FwOjEwcHg7CiAgICBhbGlnbi1pdGVtczpjZW50ZXI7CiAgfQogIGJ1dHRvbnsKICAgIGJhY2tncm91bmQ6dmFyKC0tcGFuZWwtMik7CiAgICBjb2xvcjp2YXIoLS10ZXh0KTsKICAgIGJvcmRlcjoxcHggc29saWQgIzMzM2E1YzsKICAgIGJvcmRlci1yYWRpdXM6MTBweDsKICAgIHBhZGRpbmc6OXB4IDE0cHg7CiAgICBmb250LXNpemU6LjlyZW07CiAgICBjdXJzb3I6cG9pbnRlcjsKICAgIHRyYW5zaXRpb246dHJhbnNmb3JtIC4xcyBlYXNl"+
+"LCBiYWNrZ3JvdW5kIC4xNXMgZWFzZSwgYm9yZGVyLWNvbG9yIC4xNXMgZWFzZTsKICB9CiAgYnV0dG9uOmhvdmVyeyBiYWNrZ3JvdW5kOiMyNjJjNGQ7IGJvcmRlci1jb2xvcjp2YXIoLS1hY2NlbnQpOyB9CiAgYnV0dG9uOmFjdGl2ZXsgdHJhbnNmb3JtOnNjYWxlKC45Nik7IH0KICAjc3RhcnRDYW1lcmF7IGJvcmRlci1jb2xvcjp2YXIoLS1vayk7IH0KICAjc3RvcENhbWVyYXsgYm9yZGVyLWNvbG9yOnZhcigtLWRhbmdlcik7IH0KICAuY29udHJvbC1ncm91cHsKICAgIGRpc3BsYXk6ZmxleDsKICAgIGFsaWduLWl0ZW1zOmNlbnRlcjsKICAgIGdhcDo4cHg7CiAgICBiYWNrZ3JvdW5kOnZhcigtLXBhbmVsLTIpOwogICAgYm9yZGVyOjFweCBzb2xpZCAjMzMzYTVjOwogICAgYm9yZGVyLXJhZGl1czoxMHB4OwogICAgcGFkZGluZzo2cHggMTJweDsKICB9CiAgLmNvbnRyb2wtZ3JvdXAgbGFiZWx7IGZvbnQtc2l6ZTouODJyZW07IGNvbG9yOnZhcigtLW11dGVkKTsgfQogIHNlbGVjdCwgaW5wdXRbdHlwZT1yYW5nZV17IGFjY2VudC1jb2xvcjp2YXIoLS1hY2NlbnQpOyB9CiAgc2VsZWN0ewogICAgYmFja2dyb3VuZDojMGYxMjIwOwogICAgY29sb3I6dmFyKC0tdGV4dCk7CiAgICBib3JkZXI6MXB4IHNvbGlkICMzMzNhNWM7CiAgICBib3JkZXItcmFkaXVzOjZweDsKICAgIHBhZGRpbmc6NHB4IDZweDsKICB9CiAgaW5wdXRbdHlwZT1jb2xvcl17CiAgICB3aWR0aDozNHB4OyBoZWlnaHQ6MjZweDsgYm9yZGVyOm5vbmU7IGJhY2tncm91bmQ6bm9uZTsgY3Vyc29yOnBvaW50ZXI7IHBhZGRpbmc6MDsKICB9CiAgI3BlblNpemVWYWx1ZXsgY29sb3I6dmFyKC0tYWNjZW50LTIpOyBmb250LXdlaWdodDo2MDA7IG1pbi13aWR0aDoyMHB4OyBkaXNwbGF5OmlubGluZS1ibG9jazsgfQogIC5nZXN0dXJlLWluc3RydWN0aW9uc3sKICAgIGZvbnQtc2l6ZTouODJyZW07CiAgICBjb2xvcjp2YXIoLS1tdXRlZCk7CiAgICBiYWNrZ3JvdW5kOiMwZjEyMjA7CiAgICBib3JkZXI6MXB4IGRhc2hlZCAjMzMzYTVjOwogICAgYm9yZGVyLXJhZGl1czoxMHB4OwogICAgcGFkZGluZzo4cHggMTJweDsKICAgIG1hcmdpbjowOwogIH0KICAuZ2VzdHVyZS1pbnN0cnVjdGlvbnMgcHsgbWFyZ2luOjA7IH0KCiAgLnN0YWdlewogICAgcG9zaXRpb246cmVsYXRpdmU7CiAgICB3aWR0aDoxMDAlOwogICAgYXNwZWN0LXJhdGlvOjQvMzsKICAgIG1heC1oZWlnaHQ6NzB2aDsKICAgIGJhY2tncm91bmQ6IzAwMDsKICAgIGJvcmRlci1yYWRpdXM6MTZweDsKICAgIG92ZXJmbG93OmhpZGRlbjsKICAgIGJvcmRlcjoxcHggc29saWQgIzJhMmY0ZDsKICAgIGJveC1zaGFkb3c6MCAyMHB4IDYwcHggcmdiYSgwLDAsMCwuNCk7CiAgfQogICN3ZWJjYW0sICNkcmF3aW5nQ2FudmFzLCAjbGFuZG1hcmtDYW52YXN7CiAgICBwb3NpdGlvbjphYnNvbHV0ZTsKICAgIHRvcDowOyBsZWZ0OjA7CiAgICB3aWR0aDoxMDAlOwogICAgaGVpZ2h0OjEwMCU7CiAgICB0cmFuc2Zvcm06c2NhbGVY"+
+"KC0xKTsgLyogbWlycm9yIGZvciBuYXR1cmFsIHNlbGYtdmlldyAqLwogIH0KICAjd2ViY2FteyBvYmplY3QtZml0OmNvdmVyOyB9CiAgI2RyYXdpbmdDYW52YXN7IHotaW5kZXg6MjsgfQogICNsYW5kbWFya0NhbnZhc3sgei1pbmRleDozOyBwb2ludGVyLWV2ZW50czpub25lOyB9CgogICNpbnN0cnVjdGlvbnN7CiAgICBiYWNrZ3JvdW5kOnZhcigtLXBhbmVsKTsKICAgIGJvcmRlcjoxcHggc29saWQgIzJhMmY0ZDsKICAgIGJvcmRlci1yYWRpdXM6MTRweDsKICAgIHBhZGRpbmc6MTJweCAxNnB4OwogICAgZm9udC1zaXplOi44NXJlbTsKICAgIGNvbG9yOnZhcigtLW11dGVkKTsKICB9CiAgI2luc3RydWN0aW9ucyBweyBtYXJnaW46NHB4IDA7IH0KCiAgI3N0YXR1c3sKICAgIGFsaWduLXNlbGY6ZmxleC1zdGFydDsKICAgIGJhY2tncm91bmQ6dmFyKC0tcGFuZWwtMik7CiAgICBib3JkZXI6MXB4IHNvbGlkICMzMzNhNWM7CiAgICBib3JkZXItcmFkaXVzOjk5OXB4OwogICAgcGFkZGluZzo2cHggMTZweDsKICAgIGZvbnQtc2l6ZTouODJyZW07CiAgICBjb2xvcjp2YXIoLS1kYW5nZXIpOwogIH0KICAjc3RhdHVzLmxpdmV7IGNvbG9yOnZhcigtLW9rKTsgYm9yZGVyLWNvbG9yOnZhcigtLW9rKTsgfQoKICAjbG9hZGluZ092ZXJsYXl7CiAgICBwb3NpdGlvbjphYnNvbHV0ZTsgaW5zZXQ6MDsgei1pbmRleDo0OwogICAgZGlzcGxheTpmbGV4OyBhbGlnbi1pdGVtczpjZW50ZXI7IGp1c3RpZnktY29udGVudDpjZW50ZXI7CiAgICBiYWNrZ3JvdW5kOnJnYmEoMTAsMTIsMjQsLjc1KTsKICAgIGNvbG9yOnZhcigtLW11dGVkKTsKICAgIGZvbnQtc2l6ZTouOXJlbTsKICAgIHRleHQtYWxpZ246Y2VudGVyOwogICAgcGFkZGluZzoyMHB4OwogIH0KICAuaGlkZGVueyBkaXNwbGF5Om5vbmUgIWltcG9ydGFudDsgfQoKICBAbWVkaWEgKG1heC13aWR0aDo2NDBweCl7CiAgICBoMXsgZm9udC1zaXplOjEuMXJlbTsgfQogICAgLmNvbnRyb2xzeyBnYXA6OHB4OyB9CiAgICBidXR0b24sIC5jb250cm9sLWdyb3VweyBmb250LXNpemU6LjhyZW07IHBhZGRpbmc6N3B4IDEwcHg7IH0KICB9Cjwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+CjxkaXYgY2xhc3M9ImNvbnRhaW5lciI+CgogIDxoZWFkZXI+CiAgICA8aDE+SGFuZCBUcmFja2luZyBEcmF3aW5nIENhbnZhczwvaDE+CiAgICA8ZGl2IGNsYXNzPSJjb250cm9scyI+CiAgICAgIDxidXR0b24gaWQ9InN0YXJ0Q2FtZXJhIj5TdGFydCBDYW1lcmE8L2J1dHRvbj4KICAgICAgPGJ1dHRvbiBpZD0ic3RvcENhbWVyYSI+U3RvcCBDYW1lcmE8L2J1dHRvbj4KICAgICAgPGJ1dHRvbiBpZD0iY2xlYXJDYW52YXMiPkNsZWFyIENhbnZhczwvYnV0dG9uPgoKICAgICAgPGRpdiBjbGFzcz0iY29udHJvbC1ncm91cCI+CiAgICAgICAgPGxhYmVsIGZvcj0icGVuQ29sb3IiPlBlbiBDb2xvcjo8L2xhYmVsPgogICAgICAgIDxpbnB1dCB0eXBlPSJjb2xvciIgaWQ9InBlbkNvbG9yIiB2YWx1ZT0iIzAwZDRmZiI+CiAgICAg"+
+"IDwvZGl2PgoKICAgICAgPGRpdiBjbGFzcz0iY29udHJvbC1ncm91cCI+CiAgICAgICAgPGxhYmVsIGZvcj0icGVuU2l6ZSI+UGVuIFNpemU6PC9sYWJlbD4KICAgICAgICA8aW5wdXQgdHlwZT0icmFuZ2UiIGlkPSJwZW5TaXplIiBtaW49IjEiIG1heD0iMzAiIHZhbHVlPSI1Ij4KICAgICAgICA8c3BhbiBpZD0icGVuU2l6ZVZhbHVlIj41PC9zcGFuPgogICAgICA8L2Rpdj4KCiAgICAgIDxkaXYgY2xhc3M9ImNvbnRyb2wtZ3JvdXAiPgogICAgICAgIDxsYWJlbCBmb3I9ImRyYXdpbmdNb2RlIj5Nb2RlOjwvbGFiZWw+CiAgICAgICAgPHNlbGVjdCBpZD0iZHJhd2luZ01vZGUiPgogICAgICAgICAgPG9wdGlvbiB2YWx1ZT0icGVuIj5QZW48L29wdGlvbj4KICAgICAgICAgIDxvcHRpb24gdmFsdWU9InNwcmF5Ij5TcHJheTwvb3B0aW9uPgogICAgICAgICAgPG9wdGlvbiB2YWx1ZT0iZXJhc2VyIj5FcmFzZXI8L29wdGlvbj4KICAgICAgICAgIDxvcHRpb24gdmFsdWU9InJhaW5ib3ciPlJhaW5ib3c8L29wdGlvbj4KICAgICAgICA8L3NlbGVjdD4KICAgICAgPC9kaXY+CgogICAgICA8ZGl2IGNsYXNzPSJjb250cm9sLWdyb3VwIj4KICAgICAgICA8bGFiZWwgZm9yPSJzaGFwZU1vZGUiPlNoYXBlOjwvbGFiZWw+CiAgICAgICAgPHNlbGVjdCBpZD0ic2hhcGVNb2RlIj4KICAgICAgICAgIDxvcHRpb24gdmFsdWU9ImZyZWUiPkZyZWUgRHJhdzwvb3B0aW9uPgogICAgICAgICAgPG9wdGlvbiB2YWx1ZT0ibGluZSI+TGluZTwvb3B0aW9uPgogICAgICAgICAgPG9wdGlvbiB2YWx1ZT0iY2lyY2xlIj5DaXJjbGU8L29wdGlvbj4KICAgICAgICAgIDxvcHRpb24gdmFsdWU9InJlY3RhbmdsZSI+UmVjdGFuZ2xlPC9vcHRpb24+CiAgICAgICAgPC9zZWxlY3Q+CiAgICAgIDwvZGl2PgoKICAgICAgPGJ1dHRvbiBpZD0ic2F2ZURyYXdpbmciPlNhdmUgRHJhd2luZzwvYnV0dG9uPgogICAgPC9kaXY+CgogICAgPHAgY2xhc3M9Imdlc3R1cmUtaW5zdHJ1Y3Rpb25zIj4KICAgICAgR2VzdHVyZSBDb250cm9sczog4pid77iPIFBvaW50IChpbmRleCB1cCwgb3RoZXJzIGN1cmxlZCkg4oCUIERyYXcgfCDinIsgT3BlbiBwYWxtIOKAlCBTdG9wIC8gQ29tbWl0IHNoYXBlIHwg8J+kjyBQaW5jaCAodGh1bWIraW5kZXgpIOKAlCBRdWljayBjbGVhciAoaG9sZCB+MXMpCiAgICA8L3A+CiAgPC9oZWFkZXI+CgogIDxkaXYgY2xhc3M9InN0YWdlIiBpZD0ic3RhZ2UiPgogICAgPHZpZGVvIGlkPSJ3ZWJjYW0iIGF1dG9wbGF5IHBsYXlzaW5saW5lIG11dGVkPjwvdmlkZW8+CiAgICA8Y2FudmFzIGlkPSJkcmF3aW5nQ2FudmFzIj48L2NhbnZhcz4KICAgIDxjYW52YXMgaWQ9ImxhbmRtYXJrQ2FudmFzIj48L2NhbnZhcz4KICAgIDxkaXYgaWQ9ImxvYWRpbmdPdmVybGF5Ij5DbGljayAiU3RhcnQgQ2FtZXJhIiB0byBiZWdpbi4gQ2FtZXJhIGFuZCBoYW5kLXRyYWNraW5nIG1vZGVsIHdpbGwgbG9hZCBvbiBzdGFydC48L2Rpdj4KICA8L2Rpdj4KCiAgPGRpdiBpZD0iaW5z"+
+"dHJ1Y3Rpb25zIj4KICAgIDxwPjxzdHJvbmc+SG93IHRvIGRyYXc6PC9zdHJvbmc+IFBvaW50IHdpdGggeW91ciBpbmRleCBmaW5nZXIgKGN1cmwgdGhlIG90aGVyIGZpbmdlcnMpIHRvIGRyYXcuIE9wZW4geW91ciBoYW5kIGZ1bGx5IHRvIGxpZnQgdGhlIHBlbi48L3A+CiAgICA8cD48c3Ryb25nPlNoYXBlczo8L3N0cm9uZz4gQ2hvb3NlIExpbmUgLyBDaXJjbGUgLyBSZWN0YW5nbGUsIHBvaW50IHRvIHNldCB0aGUgc3RhcnQsIGtlZXAgcG9pbnRpbmcgd2hpbGUgeW91IG1vdmUsIHRoZW4gb3BlbiB5b3VyIHBhbG0gdG8gY29tbWl0IHRoZSBzaGFwZS48L3A+CiAgICA8cD48c3Ryb25nPlRpcDo8L3N0cm9uZz4gR29vZCwgZXZlbiBsaWdodGluZyBoZWxwcyB0cmFja2luZyBhY2N1cmFjeS4gS2VlcCB5b3VyIGhhbmQgZnVsbHkgaW5zaWRlIHRoZSBmcmFtZS48L3A+CiAgPC9kaXY+CgogIDxkaXYgaWQ9InN0YXR1cyI+Q2FtZXJhIG9mZjwvZGl2Pgo8L2Rpdj4KCjwhLS0gTWVkaWFQaXBlIEhhbmRzIChsb2FkZWQgZnJvbSBDRE4pIC0tPgo8c2NyaXB0IHNyYz0iaHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L25wbS9AbWVkaWFwaXBlL2NhbWVyYV91dGlscy9jYW1lcmFfdXRpbHMuanMiIGNyb3Nzb3JpZ2luPSJhbm9ueW1vdXMiPjwvc2NyaXB0Pgo8c2NyaXB0IHNyYz0iaHR0cHM6Ly9jZG4uanNkZWxpdnIubmV0L25wbS9AbWVkaWFwaXBlL2RyYXdpbmdfdXRpbHMvZHJhd2luZ191dGlscy5qcyIgY3Jvc3NvcmlnaW49ImFub255bW91cyI+PC9zY3JpcHQ+CjxzY3JpcHQgc3JjPSJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvbnBtL0BtZWRpYXBpcGUvaGFuZHMvaGFuZHMuanMiIGNyb3Nzb3JpZ2luPSJhbm9ueW1vdXMiPjwvc2NyaXB0PgoKPHNjcmlwdD4KKGZ1bmN0aW9uKCl7CiAgInVzZSBzdHJpY3QiOwoKICAvLyAtLS0tLS0tLS0tIERPTSAtLS0tLS0tLS0tCiAgY29uc3QgdmlkZW8gICAgICAgICAgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnd2ViY2FtJyk7CiAgY29uc3QgZHJhd2luZ0NhbnZhcyAgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZHJhd2luZ0NhbnZhcycpOwogIGNvbnN0IGxhbmRtYXJrQ2FudmFzID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2xhbmRtYXJrQ2FudmFzJyk7CiAgY29uc3Qgc3RhZ2UgICAgICAgICAgID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3N0YWdlJyk7CiAgY29uc3QgbG9hZGluZ092ZXJsYXkgID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2xvYWRpbmdPdmVybGF5Jyk7CiAgY29uc3Qgc3RhdHVzRWwgICAgICAgID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3N0YXR1cycpOwoKICBjb25zdCBzdGFydEJ0biAgID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3N0YXJ0Q2FtZXJhJyk7CiAgY29uc3Qgc3RvcEJ0biAgICA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdzdG9wQ2FtZXJhJyk7CiAgY29uc3QgY2xlYXJCdG4gICA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdjbGVh"+
+"ckNhbnZhcycpOwogIGNvbnN0IHNhdmVCdG4gICAgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnc2F2ZURyYXdpbmcnKTsKICBjb25zdCBjb2xvcklucHV0ID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3BlbkNvbG9yJyk7CiAgY29uc3Qgc2l6ZUlucHV0ICA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdwZW5TaXplJyk7CiAgY29uc3Qgc2l6ZUxhYmVsICA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdwZW5TaXplVmFsdWUnKTsKICBjb25zdCBtb2RlU2VsZWN0ID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2RyYXdpbmdNb2RlJyk7CiAgY29uc3Qgc2hhcGVTZWxlY3Q9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdzaGFwZU1vZGUnKTsKCiAgY29uc3QgZEN0eCA9IGRyYXdpbmdDYW52YXMuZ2V0Q29udGV4dCgnMmQnKTsKICBjb25zdCBsQ3R4ID0gbGFuZG1hcmtDYW52YXMuZ2V0Q29udGV4dCgnMmQnKTsKCiAgLy8gLS0tLS0tLS0tLSBTdGF0ZSAtLS0tLS0tLS0tCiAgbGV0IGNhbWVyYSA9IG51bGw7CiAgbGV0IGhhbmRzID0gbnVsbDsKICBsZXQgcnVubmluZyA9IGZhbHNlOwogIGxldCByYWluYm93SHVlID0gMDsKCiAgbGV0IGlzUG9pbnRpbmcgPSBmYWxzZTsgICAgICAvLyBjdXJyZW50bHkgaW4gImRyYXciIGdlc3R1cmUKICBsZXQgbGFzdFggPSBudWxsLCBsYXN0WSA9IG51bGw7CiAgbGV0IHNoYXBlU3RhcnRYID0gbnVsbCwgc2hhcGVTdGFydFkgPSBudWxsOwogIGxldCBzaGFwZVNuYXBzaG90ID0gbnVsbDsgICAgLy8gY2FudmFzIHNuYXBzaG90IGZvciBsaXZlIHNoYXBlIHByZXZpZXcKCiAgbGV0IHBpbmNoSG9sZFN0YXJ0ID0gbnVsbDsKICBjb25zdCBQSU5DSF9IT0xEX01TID0gMTAwMDsKCiAgLy8gLS0tLS0tLS0tLSBDYW52YXMgc2l6aW5nIC0tLS0tLS0tLS0KICBmdW5jdGlvbiByZXNpemVDYW52YXNlcygpewogICAgY29uc3QgcmVjdCA9IHN0YWdlLmdldEJvdW5kaW5nQ2xpZW50UmVjdCgpOwogICAgY29uc3QgdyA9IE1hdGgubWF4KDEsIE1hdGgucm91bmQocmVjdC53aWR0aCkpOwogICAgY29uc3QgaCA9IE1hdGgubWF4KDEsIE1hdGgucm91bmQocmVjdC5oZWlnaHQpKTsKCiAgICBbZHJhd2luZ0NhbnZhcywgbGFuZG1hcmtDYW52YXNdLmZvckVhY2goYz0+ewogICAgICBpZihjLndpZHRoICE9PSB3IHx8IGMuaGVpZ2h0ICE9PSBoKXsKICAgICAgICAvLyBwcmVzZXJ2ZSBkcmF3aW5nIG9uIHJlc2l6ZQogICAgICAgIGNvbnN0IHRtcCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2NhbnZhcycpOwogICAgICAgIHRtcC53aWR0aCA9IGMud2lkdGg7IHRtcC5oZWlnaHQgPSBjLmhlaWdodDsKICAgICAgICB0bXAuZ2V0Q29udGV4dCgnMmQnKS5kcmF3SW1hZ2UoYywwLDApOwogICAgICAgIGMud2lkdGggPSB3OyBjLmhlaWdodCA9IGg7CiAgICAgICAgaWYoYyA9PT0gZHJhd2luZ0NhbnZhcyl7CiAgICAgICAgICBkQ3R4LmRyYXdJbWFnZSh0bXAsMCwwLHRtcC53aWR0aCx0bXAuaGVpZ2h0LDAsMCx3LGgpOwog"+
+"ICAgICAgIH0KICAgICAgfQogICAgfSk7CiAgfQogIHdpbmRvdy5hZGRFdmVudExpc3RlbmVyKCdyZXNpemUnLCByZXNpemVDYW52YXNlcyk7CgogIC8vIC0tLS0tLS0tLS0gU3RhdHVzIC0tLS0tLS0tLS0KICBmdW5jdGlvbiBzZXRTdGF0dXModGV4dCwgbGl2ZSl7CiAgICBzdGF0dXNFbC50ZXh0Q29udGVudCA9IHRleHQ7CiAgICBzdGF0dXNFbC5jbGFzc0xpc3QudG9nZ2xlKCdsaXZlJywgISFsaXZlKTsKICB9CgogIC8vIC0tLS0tLS0tLS0gR2VzdHVyZSBoZWxwZXJzIC0tLS0tLS0tLS0KICAvLyBsYW5kbWFyayBpbmRpY2VzIChNZWRpYVBpcGUgSGFuZHMpCiAgY29uc3QgVElQID0ge3RodW1iOjQsIGluZGV4OjgsIG1pZGRsZToxMiwgcmluZzoxNiwgcGlua3k6MjB9OwogIGNvbnN0IFBJUCA9IHtpbmRleDo2LCBtaWRkbGU6MTAsIHJpbmc6MTQsIHBpbmt5OjE4fTsKCiAgZnVuY3Rpb24gZGlzdChhLGIpewogICAgcmV0dXJuIE1hdGguaHlwb3QoYS54LWIueCwgYS55LWIueSk7CiAgfQoKICBmdW5jdGlvbiBmaW5nZXJFeHRlbmRlZChsbSwgdGlwSWR4LCBwaXBJZHgpewogICAgLy8gZXh0ZW5kZWQgaWYgdGlwIGlzIGFib3ZlIChzbWFsbGVyIHkpIHRoYW4gcGlwLCBpbiBub3JtYWxpemVkIGNvb3JkcwogICAgcmV0dXJuIGxtW3RpcElkeF0ueSA8IGxtW3BpcElkeF0ueSAtIDAuMDI7CiAgfQoKICBmdW5jdGlvbiBpc1BvaW50aW5nR2VzdHVyZShsbSl7CiAgICBjb25zdCBpbmRleFVwICA9IGZpbmdlckV4dGVuZGVkKGxtLCBUSVAuaW5kZXgsIFBJUC5pbmRleCk7CiAgICBjb25zdCBtaWRkbGVVcCA9IGZpbmdlckV4dGVuZGVkKGxtLCBUSVAubWlkZGxlLCBQSVAubWlkZGxlKTsKICAgIGNvbnN0IHJpbmdVcCAgID0gZmluZ2VyRXh0ZW5kZWQobG0sIFRJUC5yaW5nLCBQSVAucmluZyk7CiAgICBjb25zdCBwaW5reVVwICA9IGZpbmdlckV4dGVuZGVkKGxtLCBUSVAucGlua3ksIFBJUC5waW5reSk7CiAgICByZXR1cm4gaW5kZXhVcCAmJiAhbWlkZGxlVXAgJiYgIXJpbmdVcCAmJiAhcGlua3lVcDsKICB9CgogIGZ1bmN0aW9uIGlzUGluY2hHZXN0dXJlKGxtKXsKICAgIHJldHVybiBkaXN0KGxtW1RJUC50aHVtYl0sIGxtW1RJUC5pbmRleF0pIDwgMC4wNDU7CiAgfQoKICBmdW5jdGlvbiBpc09wZW5QYWxtKGxtKXsKICAgIGNvbnN0IGluZGV4VXAgID0gZmluZ2VyRXh0ZW5kZWQobG0sIFRJUC5pbmRleCwgUElQLmluZGV4KTsKICAgIGNvbnN0IG1pZGRsZVVwID0gZmluZ2VyRXh0ZW5kZWQobG0sIFRJUC5taWRkbGUsIFBJUC5taWRkbGUpOwogICAgY29uc3QgcmluZ1VwICAgPSBmaW5nZXJFeHRlbmRlZChsbSwgVElQLnJpbmcsIFBJUC5yaW5nKTsKICAgIGNvbnN0IHBpbmt5VXAgID0gZmluZ2VyRXh0ZW5kZWQobG0sIFRJUC5waW5reSwgUElQLnBpbmt5KTsKICAgIHJldHVybiBpbmRleFVwICYmIG1pZGRsZVVwICYmIHJpbmdVcCAmJiBwaW5reVVwOwogIH0KCiAgLy8gLS0tLS0tLS0tLSBEcmF3aW5nIC0tLS0tLS0tLS0KICBmdW5jdGlv"+
+"biBjdXJyZW50Q29sb3IoKXsKICAgIGlmKG1vZGVTZWxlY3QudmFsdWUgPT09ICdyYWluYm93Jyl7CiAgICAgIHJhaW5ib3dIdWUgPSAocmFpbmJvd0h1ZSArIDMpICUgMzYwOwogICAgICByZXR1cm4gYGhzbCgke3JhaW5ib3dIdWV9LCA5MCUsIDU1JSlgOwogICAgfQogICAgcmV0dXJuIGNvbG9ySW5wdXQudmFsdWU7CiAgfQoKICBmdW5jdGlvbiBkcmF3RnJlZVBvaW50KHgsIHkpewogICAgY29uc3Qgc2l6ZSA9IHBhcnNlSW50KHNpemVJbnB1dC52YWx1ZSwgMTApOwogICAgY29uc3QgbW9kZSA9IG1vZGVTZWxlY3QudmFsdWU7CgogICAgaWYobW9kZSA9PT0gJ2VyYXNlcicpewogICAgICBkQ3R4LnNhdmUoKTsKICAgICAgZEN0eC5nbG9iYWxDb21wb3NpdGVPcGVyYXRpb24gPSAnZGVzdGluYXRpb24tb3V0JzsKICAgICAgZEN0eC5iZWdpblBhdGgoKTsKICAgICAgZEN0eC5hcmMoeCwgeSwgc2l6ZSAqIDEuNSwgMCwgTWF0aC5QSSoyKTsKICAgICAgZEN0eC5maWxsKCk7CiAgICAgIGRDdHgucmVzdG9yZSgpOwogICAgICBsYXN0WCA9IHg7IGxhc3RZID0geTsKICAgICAgcmV0dXJuOwogICAgfQoKICAgIGNvbnN0IGNvbG9yID0gY3VycmVudENvbG9yKCk7CgogICAgaWYobW9kZSA9PT0gJ3NwcmF5Jyl7CiAgICAgIGRDdHguZmlsbFN0eWxlID0gY29sb3I7CiAgICAgIGNvbnN0IGRlbnNpdHkgPSBNYXRoLm1heCg2LCBzaXplKTsKICAgICAgZm9yKGxldCBpPTA7aTxkZW5zaXR5O2krKyl7CiAgICAgICAgY29uc3QgYW5nbGUgPSBNYXRoLnJhbmRvbSgpKk1hdGguUEkqMjsKICAgICAgICBjb25zdCByYWRpdXMgPSBNYXRoLnJhbmRvbSgpKnNpemUqMS41OwogICAgICAgIGNvbnN0IHB4ID0geCArIE1hdGguY29zKGFuZ2xlKSpyYWRpdXM7CiAgICAgICAgY29uc3QgcHkgPSB5ICsgTWF0aC5zaW4oYW5nbGUpKnJhZGl1czsKICAgICAgICBkQ3R4LmJlZ2luUGF0aCgpOwogICAgICAgIGRDdHguYXJjKHB4LCBweSwgTWF0aC5tYXgoMSwgc2l6ZS82KSwgMCwgTWF0aC5QSSoyKTsKICAgICAgICBkQ3R4LmZpbGwoKTsKICAgICAgfQogICAgICBsYXN0WCA9IHg7IGxhc3RZID0geTsKICAgICAgcmV0dXJuOwogICAgfQoKICAgIC8vIHBlbiAmIHJhaW5ib3c6IHNtb290aCBsaW5lCiAgICBkQ3R4LnN0cm9rZVN0eWxlID0gY29sb3I7CiAgICBkQ3R4LmxpbmVXaWR0aCA9IHNpemU7CiAgICBkQ3R4LmxpbmVDYXAgPSAncm91bmQnOwogICAgZEN0eC5saW5lSm9pbiA9ICdyb3VuZCc7CiAgICBpZihsYXN0WCA9PT0gbnVsbCl7CiAgICAgIGRDdHguYmVnaW5QYXRoKCk7CiAgICAgIGRDdHgubW92ZVRvKHgsIHkpOwogICAgICBkQ3R4LmxpbmVUbyh4KzAuMSwgeSswLjEpOwogICAgICBkQ3R4LnN0cm9rZSgpOwogICAgfSBlbHNlIHsKICAgICAgZEN0eC5iZWdpblBhdGgoKTsKICAgICAgZEN0eC5tb3ZlVG8obGFzdFgsIGxhc3RZKTsKICAgICAgZEN0eC5saW5lVG8oeCwgeSk7CiAgICAgIGRDdHguc3Ryb2tlKCk7CiAgICB9CiAgICBsYXN0WCA9IHg7IGxh"+
+"c3RZID0geTsKICB9CgogIGZ1bmN0aW9uIGRyYXdTaGFwZVByZXZpZXcoeCwgeSl7CiAgICAvLyByZXN0b3JlIHNuYXBzaG90LCB0aGVuIGRyYXcgcHJldmlldyBzaGFwZSBvbiB0b3AKICAgIGlmKHNoYXBlU25hcHNob3QpewogICAgICBkQ3R4LnB1dEltYWdlRGF0YShzaGFwZVNuYXBzaG90LCAwLCAwKTsKICAgIH0KICAgIGNvbnN0IHNpemUgPSBwYXJzZUludChzaXplSW5wdXQudmFsdWUsIDEwKTsKICAgIGRDdHguc3Ryb2tlU3R5bGUgPSBjdXJyZW50Q29sb3IoKTsKICAgIGRDdHgubGluZVdpZHRoID0gc2l6ZTsKICAgIGRDdHgubGluZUNhcCA9ICdyb3VuZCc7CiAgICBkQ3R4LmxpbmVKb2luID0gJ3JvdW5kJzsKCiAgICBjb25zdCBzaGFwZSA9IHNoYXBlU2VsZWN0LnZhbHVlOwogICAgZEN0eC5iZWdpblBhdGgoKTsKICAgIGlmKHNoYXBlID09PSAnbGluZScpewogICAgICBkQ3R4Lm1vdmVUbyhzaGFwZVN0YXJ0WCwgc2hhcGVTdGFydFkpOwogICAgICBkQ3R4LmxpbmVUbyh4LCB5KTsKICAgIH0gZWxzZSBpZihzaGFwZSA9PT0gJ3JlY3RhbmdsZScpewogICAgICBkQ3R4LnJlY3Qoc2hhcGVTdGFydFgsIHNoYXBlU3RhcnRZLCB4LXNoYXBlU3RhcnRYLCB5LXNoYXBlU3RhcnRZKTsKICAgIH0gZWxzZSBpZihzaGFwZSA9PT0gJ2NpcmNsZScpewogICAgICBjb25zdCByID0gTWF0aC5oeXBvdCh4LXNoYXBlU3RhcnRYLCB5LXNoYXBlU3RhcnRZKTsKICAgICAgZEN0eC5hcmMoc2hhcGVTdGFydFgsIHNoYXBlU3RhcnRZLCByLCAwLCBNYXRoLlBJKjIpOwogICAgfQogICAgZEN0eC5zdHJva2UoKTsKICB9CgogIGZ1bmN0aW9uIGNvbW1pdFNoYXBlKHgsIHkpewogICAgaWYoc2hhcGVTbmFwc2hvdCl7CiAgICAgIGRDdHgucHV0SW1hZ2VEYXRhKHNoYXBlU25hcHNob3QsIDAsIDApOwogICAgfQogICAgZHJhd0ZyZWVQb2ludHNBc1NoYXBlRmluYWwoeCwgeSk7CiAgICBzaGFwZVNuYXBzaG90ID0gbnVsbDsKICB9CgogIGZ1bmN0aW9uIGRyYXdGcmVlUG9pbnRzQXNTaGFwZUZpbmFsKHgsIHkpewogICAgY29uc3Qgc2l6ZSA9IHBhcnNlSW50KHNpemVJbnB1dC52YWx1ZSwgMTApOwogICAgZEN0eC5zdHJva2VTdHlsZSA9IGN1cnJlbnRDb2xvcigpOwogICAgZEN0eC5saW5lV2lkdGggPSBzaXplOwogICAgZEN0eC5saW5lQ2FwID0gJ3JvdW5kJzsKICAgIGRDdHgubGluZUpvaW4gPSAncm91bmQnOwogICAgY29uc3Qgc2hhcGUgPSBzaGFwZVNlbGVjdC52YWx1ZTsKICAgIGRDdHguYmVnaW5QYXRoKCk7CiAgICBpZihzaGFwZSA9PT0gJ2xpbmUnKXsKICAgICAgZEN0eC5tb3ZlVG8oc2hhcGVTdGFydFgsIHNoYXBlU3RhcnRZKTsKICAgICAgZEN0eC5saW5lVG8oeCwgeSk7CiAgICB9IGVsc2UgaWYoc2hhcGUgPT09ICdyZWN0YW5nbGUnKXsKICAgICAgZEN0eC5yZWN0KHNoYXBlU3RhcnRYLCBzaGFwZVN0YXJ0WSwgeC1zaGFwZVN0YXJ0WCwgeS1zaGFwZVN0YXJ0WSk7CiAgICB9IGVsc2UgaWYoc2hhcGUgPT09ICdjaXJjbGUnKXsKICAgICAgY29u"+
+"c3QgciA9IE1hdGguaHlwb3QoeC1zaGFwZVN0YXJ0WCwgeS1zaGFwZVN0YXJ0WSk7CiAgICAgIGRDdHguYXJjKHNoYXBlU3RhcnRYLCBzaGFwZVN0YXJ0WSwgciwgMCwgTWF0aC5QSSoyKTsKICAgIH0KICAgIGRDdHguc3Ryb2tlKCk7CiAgfQoKICBmdW5jdGlvbiBjbGVhckNhbnZhcygpewogICAgZEN0eC5jbGVhclJlY3QoMCwwLGRyYXdpbmdDYW52YXMud2lkdGgsIGRyYXdpbmdDYW52YXMuaGVpZ2h0KTsKICB9CgogIC8vIC0tLS0tLS0tLS0gTGFuZG1hcmsgcmVuZGVyaW5nIC0tLS0tLS0tLS0KICBmdW5jdGlvbiBkcmF3TGFuZG1hcmtzKGxtLCBwb2ludGluZywgcGluY2hpbmcpewogICAgbEN0eC5jbGVhclJlY3QoMCwwLGxhbmRtYXJrQ2FudmFzLndpZHRoLCBsYW5kbWFya0NhbnZhcy5oZWlnaHQpOwogICAgY29uc3QgdyA9IGxhbmRtYXJrQ2FudmFzLndpZHRoLCBoID0gbGFuZG1hcmtDYW52YXMuaGVpZ2h0OwoKICAgIGNvbnN0IGNvbm5lY3Rpb25zID0gWwogICAgICBbMCwxXSxbMSwyXSxbMiwzXSxbMyw0XSwKICAgICAgWzAsNV0sWzUsNl0sWzYsN10sWzcsOF0sCiAgICAgIFs1LDldLFs5LDEwXSxbMTAsMTFdLFsxMSwxMl0sCiAgICAgIFs5LDEzXSxbMTMsMTRdLFsxNCwxNV0sWzE1LDE2XSwKICAgICAgWzEzLDE3XSxbMTcsMThdLFsxOCwxOV0sWzE5LDIwXSwKICAgICAgWzAsMTddCiAgICBdOwoKICAgIGxDdHguc3Ryb2tlU3R5bGUgPSBwb2ludGluZyA/ICdyZ2JhKDAsMjEyLDI1NSwwLjgpJyA6ICdyZ2JhKDEyNCw5MiwyNTUsMC42KSc7CiAgICBsQ3R4LmxpbmVXaWR0aCA9IDI7CiAgICBjb25uZWN0aW9ucy5mb3JFYWNoKChbYSxiXSk9PnsKICAgICAgbEN0eC5iZWdpblBhdGgoKTsKICAgICAgbEN0eC5tb3ZlVG8obG1bYV0ueCp3LCBsbVthXS55KmgpOwogICAgICBsQ3R4LmxpbmVUbyhsbVtiXS54KncsIGxtW2JdLnkqaCk7CiAgICAgIGxDdHguc3Ryb2tlKCk7CiAgICB9KTsKCiAgICBsbS5mb3JFYWNoKChwdCwgaSk9PnsKICAgICAgbEN0eC5iZWdpblBhdGgoKTsKICAgICAgbEN0eC5maWxsU3R5bGUgPSAoaSA9PT0gVElQLmluZGV4ICYmIHBvaW50aW5nKSA/ICcjMDBkNGZmJyA6ICcjN2M1Y2ZmJzsKICAgICAgbEN0eC5hcmMocHQueCp3LCBwdC55KmgsIGk9PT1USVAuaW5kZXggPyA2IDogMy41LCAwLCBNYXRoLlBJKjIpOwogICAgICBsQ3R4LmZpbGwoKTsKICAgIH0pOwoKICAgIGlmKHBpbmNoaW5nKXsKICAgICAgY29uc3QgdCA9IGxtW1RJUC50aHVtYl0sIGl4ID0gbG1bVElQLmluZGV4XTsKICAgICAgbEN0eC5iZWdpblBhdGgoKTsKICAgICAgbEN0eC5zdHJva2VTdHlsZSA9ICcjZmY1YzdhJzsKICAgICAgbEN0eC5saW5lV2lkdGggPSAzOwogICAgICBsQ3R4Lm1vdmVUbyh0LngqdywgdC55KmgpOwogICAgICBsQ3R4LmxpbmVUbyhpeC54KncsIGl4LnkqaCk7CiAgICAgIGxDdHguc3Ryb2tlKCk7CiAgICB9CiAgfQoKICAvLyAtLS0tLS0tLS0tIE1lZGlhUGlwZSBIYW5kcyByZXN1bHRzIC0tLS0tLS0tLS0KICBm"+
+"dW5jdGlvbiBvblJlc3VsdHMocmVzdWx0cyl7CiAgICBpZighcnVubmluZykgcmV0dXJuOwogICAgcmVzaXplQ2FudmFzZXMoKTsKCiAgICBjb25zdCB3ID0gZHJhd2luZ0NhbnZhcy53aWR0aCwgaCA9IGRyYXdpbmdDYW52YXMuaGVpZ2h0OwoKICAgIGlmKCFyZXN1bHRzLm11bHRpSGFuZExhbmRtYXJrcyB8fCByZXN1bHRzLm11bHRpSGFuZExhbmRtYXJrcy5sZW5ndGggPT09IDApewogICAgICBsQ3R4LmNsZWFyUmVjdCgwLDAsdyxoKTsKICAgICAgaXNQb2ludGluZyA9IGZhbHNlOwogICAgICBsYXN0WCA9IGxhc3RZID0gbnVsbDsKICAgICAgcGluY2hIb2xkU3RhcnQgPSBudWxsOwogICAgICBzZXRTdGF0dXMoJ0NhbWVyYSBsaXZlIOKAlCBubyBoYW5kIGRldGVjdGVkJywgdHJ1ZSk7CiAgICAgIHJldHVybjsKICAgIH0KCiAgICBjb25zdCBsbSA9IHJlc3VsdHMubXVsdGlIYW5kTGFuZG1hcmtzWzBdOwogICAgY29uc3QgcG9pbnRpbmcgPSBpc1BvaW50aW5nR2VzdHVyZShsbSk7CiAgICBjb25zdCBwaW5jaGluZyA9IGlzUGluY2hHZXN0dXJlKGxtKTsKICAgIGNvbnN0IG9wZW5QYWxtID0gaXNPcGVuUGFsbShsbSk7CgogICAgZHJhd0xhbmRtYXJrcyhsbSwgcG9pbnRpbmcsIHBpbmNoaW5nKTsKCiAgICBjb25zdCBpbmRleFRpcCA9IGxtW1RJUC5pbmRleF07CiAgICBjb25zdCB4ID0gaW5kZXhUaXAueCAqIHc7CiAgICBjb25zdCB5ID0gaW5kZXhUaXAueSAqIGg7CgogICAgLy8gUGluY2gtaG9sZCA9PiBjbGVhciBjYW52YXMKICAgIGlmKHBpbmNoaW5nKXsKICAgICAgaWYocGluY2hIb2xkU3RhcnQgPT09IG51bGwpIHBpbmNoSG9sZFN0YXJ0ID0gcGVyZm9ybWFuY2Uubm93KCk7CiAgICAgIGVsc2UgaWYocGVyZm9ybWFuY2Uubm93KCkgLSBwaW5jaEhvbGRTdGFydCA+IFBJTkNIX0hPTERfTVMpewogICAgICAgIGNsZWFyQ2FudmFzKCk7CiAgICAgICAgcGluY2hIb2xkU3RhcnQgPSBudWxsOwogICAgICAgIHNldFN0YXR1cygnQ2FudmFzIGNsZWFyZWQgKHBpbmNoIGhvbGQpJywgdHJ1ZSk7CiAgICAgIH0KICAgIH0gZWxzZSB7CiAgICAgIHBpbmNoSG9sZFN0YXJ0ID0gbnVsbDsKICAgIH0KCiAgICBjb25zdCBzaGFwZSA9IHNoYXBlU2VsZWN0LnZhbHVlOwoKICAgIGlmKHNoYXBlID09PSAnZnJlZScpewogICAgICBpZihwb2ludGluZyl7CiAgICAgICAgc2V0U3RhdHVzKCdEcmF3aW5n4oCmJywgdHJ1ZSk7CiAgICAgICAgZHJhd0ZyZWVQb2ludCh4LCB5KTsKICAgICAgfSBlbHNlIHsKICAgICAgICBsYXN0WCA9IGxhc3RZID0gbnVsbDsKICAgICAgICBpZighcGluY2hpbmcpIHNldFN0YXR1cygnQ2FtZXJhIGxpdmUg4oCUIGhhbmQgZGV0ZWN0ZWQnLCB0cnVlKTsKICAgICAgfQogICAgfSBlbHNlIHsKICAgICAgLy8gc2hhcGUgbW9kZXM6IHBvaW50IHRvIHN0YXJ0ICYgZHJhZywgb3BlbiBwYWxtIHRvIGNvbW1pdAogICAgICBpZihwb2ludGluZyAmJiBzaGFwZVN0YXJ0WCA9PT0gbnVsbCl7CiAgICAgICAgc2hhcGVTdGFydFggPSB4"+
+"OyBzaGFwZVN0YXJ0WSA9IHk7CiAgICAgICAgc2hhcGVTbmFwc2hvdCA9IGRDdHguZ2V0SW1hZ2VEYXRhKDAsMCx3LGgpOwogICAgICAgIHNldFN0YXR1cygnU2hhcGUgc3RhcnQgc2V0IOKAlCBtb3ZlIGFuZCBvcGVuIHBhbG0gdG8gY29tbWl0JywgdHJ1ZSk7CiAgICAgIH0gZWxzZSBpZihwb2ludGluZyAmJiBzaGFwZVN0YXJ0WCAhPT0gbnVsbCl7CiAgICAgICAgZHJhd1NoYXBlUHJldmlldyh4LCB5KTsKICAgICAgICBzZXRTdGF0dXMoJ0FkanVzdGluZyBzaGFwZeKApicsIHRydWUpOwogICAgICB9IGVsc2UgaWYob3BlblBhbG0gJiYgc2hhcGVTdGFydFggIT09IG51bGwpewogICAgICAgIGNvbW1pdFNoYXBlKHgsIHkpOwogICAgICAgIHNoYXBlU3RhcnRYID0gc2hhcGVTdGFydFkgPSBudWxsOwogICAgICAgIHNldFN0YXR1cygnU2hhcGUgY29tbWl0dGVkJywgdHJ1ZSk7CiAgICAgIH0KICAgIH0KCiAgICBpc1BvaW50aW5nID0gcG9pbnRpbmc7CiAgfQoKICAvLyAtLS0tLS0tLS0tIENhbWVyYSBsaWZlY3ljbGUgLS0tLS0tLS0tLQogIGFzeW5jIGZ1bmN0aW9uIHN0YXJ0Q2FtZXJhKCl7CiAgICBpZihydW5uaW5nKSByZXR1cm47CiAgICBsb2FkaW5nT3ZlcmxheS50ZXh0Q29udGVudCA9ICdMb2FkaW5nIGhhbmQtdHJhY2tpbmcgbW9kZWzigKYnOwogICAgbG9hZGluZ092ZXJsYXkuY2xhc3NMaXN0LnJlbW92ZSgnaGlkZGVuJyk7CiAgICBzZXRTdGF0dXMoJ1N0YXJ0aW5nIGNhbWVyYeKApicsIGZhbHNlKTsKCiAgICB0cnl7CiAgICAgIGlmKCFoYW5kcyl7CiAgICAgICAgaGFuZHMgPSBuZXcgSGFuZHMoewogICAgICAgICAgbG9jYXRlRmlsZTogKGZpbGUpID0+IGBodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvbnBtL0BtZWRpYXBpcGUvaGFuZHMvJHtmaWxlfWAKICAgICAgICB9KTsKICAgICAgICBoYW5kcy5zZXRPcHRpb25zKHsKICAgICAgICAgIG1heE51bUhhbmRzOiAxLAogICAgICAgICAgbW9kZWxDb21wbGV4aXR5OiAxLAogICAgICAgICAgbWluRGV0ZWN0aW9uQ29uZmlkZW5jZTogMC43LAogICAgICAgICAgbWluVHJhY2tpbmdDb25maWRlbmNlOiAwLjYKICAgICAgICB9KTsKICAgICAgICBoYW5kcy5vblJlc3VsdHMob25SZXN1bHRzKTsKICAgICAgfQoKICAgICAgY2FtZXJhID0gbmV3IENhbWVyYSh2aWRlbywgewogICAgICAgIG9uRnJhbWU6IGFzeW5jICgpID0+IHsKICAgICAgICAgIGlmKHJ1bm5pbmcpewogICAgICAgICAgICBhd2FpdCBoYW5kcy5zZW5kKHtpbWFnZTogdmlkZW99KTsKICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgIHdpZHRoOiA5NjAsCiAgICAgICAgaGVpZ2h0OiA3MjAKICAgICAgfSk7CgogICAgICBhd2FpdCBjYW1lcmEuc3RhcnQoKTsKICAgICAgcnVubmluZyA9IHRydWU7CiAgICAgIHJlc2l6ZUNhbnZhc2VzKCk7CiAgICAgIGxvYWRpbmdPdmVybGF5LmNsYXNzTGlzdC5hZGQoJ2hpZGRlbicpOwogICAgICBzZXRTdGF0dXMoJ0NhbWVyYSBsaXZlIOKAlCBoYW5kIGRldGVjdGVkJywgdHJ1"+
+"ZSk7CiAgICB9IGNhdGNoKGVycil7CiAgICAgIGNvbnNvbGUuZXJyb3IoZXJyKTsKICAgICAgbG9hZGluZ092ZXJsYXkudGV4dENvbnRlbnQgPSAnQ291bGQgbm90IGFjY2VzcyBjYW1lcmEuIFBsZWFzZSBhbGxvdyBjYW1lcmEgcGVybWlzc2lvbiBhbmQgdHJ5IGFnYWluLic7CiAgICAgIHNldFN0YXR1cygnQ2FtZXJhIGVycm9yJywgZmFsc2UpOwogICAgICBydW5uaW5nID0gZmFsc2U7CiAgICB9CiAgfQoKICBmdW5jdGlvbiBzdG9wQ2FtZXJhKCl7CiAgICBydW5uaW5nID0gZmFsc2U7CiAgICBpZihjYW1lcmEpewogICAgICBjYW1lcmEuc3RvcCgpOwogICAgfQogICAgbEN0eC5jbGVhclJlY3QoMCwwLGxhbmRtYXJrQ2FudmFzLndpZHRoLCBsYW5kbWFya0NhbnZhcy5oZWlnaHQpOwogICAgaXNQb2ludGluZyA9IGZhbHNlOwogICAgbGFzdFggPSBsYXN0WSA9IG51bGw7CiAgICBzaGFwZVN0YXJ0WCA9IHNoYXBlU3RhcnRZID0gbnVsbDsKICAgIHNoYXBlU25hcHNob3QgPSBudWxsOwogICAgbG9hZGluZ092ZXJsYXkudGV4dENvbnRlbnQgPSAnQ2xpY2sgIlN0YXJ0IENhbWVyYSIgdG8gYmVnaW4uIENhbWVyYSBhbmQgaGFuZC10cmFja2luZyBtb2RlbCB3aWxsIGxvYWQgb24gc3RhcnQuJzsKICAgIGxvYWRpbmdPdmVybGF5LmNsYXNzTGlzdC5yZW1vdmUoJ2hpZGRlbicpOwogICAgc2V0U3RhdHVzKCdDYW1lcmEgb2ZmJywgZmFsc2UpOwogIH0KCiAgLy8gLS0tLS0tLS0tLSBVSSB3aXJpbmcgLS0tLS0tLS0tLQogIHN0YXJ0QnRuLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgc3RhcnRDYW1lcmEpOwogIHN0b3BCdG4uYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLCBzdG9wQ2FtZXJhKTsKICBjbGVhckJ0bi5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsIGNsZWFyQ2FudmFzKTsKCiAgc2l6ZUlucHV0LmFkZEV2ZW50TGlzdGVuZXIoJ2lucHV0JywgKCkgPT4gewogICAgc2l6ZUxhYmVsLnRleHRDb250ZW50ID0gc2l6ZUlucHV0LnZhbHVlOwogIH0pOwoKICBzaGFwZVNlbGVjdC5hZGRFdmVudExpc3RlbmVyKCdjaGFuZ2UnLCAoKSA9PiB7CiAgICBzaGFwZVN0YXJ0WCA9IHNoYXBlU3RhcnRZID0gbnVsbDsKICAgIHNoYXBlU25hcHNob3QgPSBudWxsOwogIH0pOwoKICBzYXZlQnRuLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgKCkgPT4gewogICAgY29uc3QgdyA9IGRyYXdpbmdDYW52YXMud2lkdGgsIGggPSBkcmF3aW5nQ2FudmFzLmhlaWdodDsKICAgIGNvbnN0IG91dCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2NhbnZhcycpOwogICAgb3V0LndpZHRoID0gdzsgb3V0LmhlaWdodCA9IGg7CiAgICBjb25zdCBvY3R4ID0gb3V0LmdldENvbnRleHQoJzJkJyk7CiAgICAvLyB1bm1pcnJvciBmb3IgYSBuYXR1cmFsIHNhdmVkIGltYWdlCiAgICBvY3R4LnRyYW5zbGF0ZSh3LCAwKTsKICAgIG9jdHguc2NhbGUoLTEsIDEpOwogICAgb2N0eC5kcmF3SW1hZ2UoZHJhd2luZ0NhbnZhcywgMCwgMCk7CgogICAgY29uc3QgbGluayA9IGRvY3Vt"+
+"ZW50LmNyZWF0ZUVsZW1lbnQoJ2EnKTsKICAgIGxpbmsuZG93bmxvYWQgPSBgaGFuZC1kcmF3aW5nLSR7RGF0ZS5ub3coKX0ucG5nYDsKICAgIGxpbmsuaHJlZiA9IG91dC50b0RhdGFVUkwoJ2ltYWdlL3BuZycpOwogICAgbGluay5jbGljaygpOwogIH0pOwoKICAvLyBpbml0aWFsIHNpemluZwogIHdpbmRvdy5hZGRFdmVudExpc3RlbmVyKCdsb2FkJywgcmVzaXplQ2FudmFzZXMpOwogIHJlc2l6ZUNhbnZhc2VzKCk7Cn0pKCk7Cjwvc2NyaXB0Pgo8L2JvZHk+CjwvaHRtbD4K";
+
+function b64ToUnicodeHTML(b64){
+  const binary = atob(b64);
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder("utf-8").decode(bytes);
+}
+
+let drawStudioHTML = null;
+const drawOverlay = document.getElementById("drawOverlay");
+const drawFrame = document.getElementById("drawFrame");
+
+function openDrawStudio(){
+  if(!drawStudioHTML){
+    drawStudioHTML = b64ToUnicodeHTML(DRAWING_APP_B64);
+  }
+  drawFrame.removeAttribute("src");
+  drawFrame.srcdoc = drawStudioHTML;
+  drawOverlay.classList.add("show");
+  showToast("Hand Drawing Studio opened 🎨");
+}
+
+document.getElementById("openDrawBtn").onclick = openDrawStudio;
+document.getElementById("openDrawBtn2").onclick = openDrawStudio;
+
+document.getElementById("closeDrawBtn").onclick = () => {
+  drawOverlay.classList.remove("show");
+  drawFrame.srcdoc = "";
+  drawFrame.src = "about:blank";
+};
+
+</script>
+</body>
+</html><script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="5a5b259a-fd4d-4464-9b99-7034aa87f3ee" data-app-host="app.netlify.com"></script>
